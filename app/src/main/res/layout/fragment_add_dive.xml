@@ -18,6 +18,12 @@
         android:layout_height="wrap_content"
         android:hint="Max Depth (m)" />
 
+    <EditText
+        android:id="@+id/duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Duration (min)" />
+
     <Button
         android:id="@+id/saveDiveButton"
         android:layout_width="wrap_content"

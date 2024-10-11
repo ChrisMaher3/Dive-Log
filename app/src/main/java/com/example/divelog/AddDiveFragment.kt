@@ -22,6 +22,7 @@ class AddDiveFragment : Fragment() {
         // Get references to the EditText fields and the button
         val diveLocation: EditText = view.findViewById(R.id.diveLocation)
         val maxDepth: EditText = view.findViewById(R.id.maxDepth)
+        val duration: EditText = view.findViewById(R.id.duration)
         val saveDiveButton: Button = view.findViewById(R.id.saveDiveButton)
 
         // Set an OnClickListener on the save dive button
