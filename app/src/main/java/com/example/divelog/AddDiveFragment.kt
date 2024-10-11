@@ -9,7 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-class AddDiveFragment : Fragment() {
+class addDiveFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,18 +22,23 @@ class AddDiveFragment : Fragment() {
         // Get references to the EditText fields and the button
         val diveLocation: EditText = view.findViewById(R.id.diveLocation)
         val maxDepth: EditText = view.findViewById(R.id.maxDepth)
-        val duration: EditText = view.findViewById(R.id.duration)
+        val duration: EditText = view.findViewById(R.id.diveDuration) // Duration field
         val saveDiveButton: Button = view.findViewById(R.id.saveDiveButton)
 
         // Set an OnClickListener on the save dive button
         saveDiveButton.setOnClickListener {
-            // For debugging purposes, show a Toast
             val location = diveLocation.text.toString()
-            val depth = maxDepth.text.toString()
-            Toast.makeText(requireContext(), "Save Dive Button Clicked\nLocation: $location\nMax Depth: $depth", Toast.LENGTH_SHORT).show()
+            val depth = maxDepth.text.toString().toFloatOrNull()
+            val diveDuration = duration.text.toString().toIntOrNull() // Get duration input
 
-            // Here you would handle saving the dive details
-            // For example, save to a database or local storage
+            if (location.isNotEmpty() && depth != null && diveDuration != null) {
+                val newDive = Dive(location, depth, diveDuration)
+                (activity as MainActivity).addDive(newDive) // Add the new dive to MainActivity's list
+
+                Toast.makeText(requireContext(), "Dive Saved: $location, Depth: $depth m, Duration: $diveDuration min", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Please fill in all fields correctly", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return view

@@ -9,13 +9,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
+    private var dives: MutableList<Dive> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Load the default fragment (AddDiveFragment) when the activity starts
         if (savedInstanceState == null) {
-            loadFragment(AddDiveFragment()) // Load the AddDiveFragment as the default
+            loadFragment(addDiveFragment()) // Load the AddDiveFragment as the default
         }
 
         // Set up the BottomNavigationView
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_add_dive -> {
-                    loadFragment(AddDiveFragment()) // Load the AddDiveFragment when selected
+                    loadFragment(addDiveFragment()) // Load the AddDiveFragment when selected
                     true
                 }
                 R.id.action_diver_planner -> {
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.action_my_dives -> {
-                    loadFragment(MyDivesFragment()) // Load the MyDivesFragment
+                    loadFragment(MyDivesFragment.newInstance(dives)) // Load the MyDivesFragment with the dives
                     true
                 }
                 R.id.action_profile -> {
@@ -59,4 +61,10 @@ class MainActivity : AppCompatActivity() {
         transaction.addToBackStack(null) // Optional: Add this transaction to the back stack for navigation
         transaction.commit() // Commit the transaction to apply changes
     }
+
+    // Method to add a dive to the list
+    fun addDive(dive: Dive) {
+        dives.add(dive)
+    }
 }
+
