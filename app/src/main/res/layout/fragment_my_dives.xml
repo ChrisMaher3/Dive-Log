@@ -6,24 +6,23 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- ListView to display the list of dives -->
-    <ListView
-        android:id="@+id/divesListView"
+    <!-- RecyclerView for displaying the list of dives -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/divesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:choiceMode="multipleChoice"
-        android:listSelector="@android:color/holo_blue_light"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:paddingBottom="16dp"/>
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
 
-    <!-- Button for adding new dives -->
+    <!-- Button for adding a new dive -->
     <Button
         android:id="@+id/addDiveButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Dive"
-        android:textAllCaps="false" />
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

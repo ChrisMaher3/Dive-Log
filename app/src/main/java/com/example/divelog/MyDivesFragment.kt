@@ -2,23 +2,23 @@ package com.example.divelog
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
-import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MyDivesFragment : Fragment() {
 
-    private lateinit var divesListView: ListView
+    private lateinit var divesRecyclerView: RecyclerView
     private lateinit var addDiveButton: Button
 
     private var dives: MutableList<Dive> = mutableListOf()
-    private lateinit var adapter: ArrayAdapter<Dive>
+    private lateinit var adapter: DiveAdapter
 
     companion object {
         fun newInstance(dives: List<Dive>): MyDivesFragment {
@@ -36,6 +36,9 @@ class MyDivesFragment : Fragment() {
         arguments?.let {
             dives = it.getParcelableArrayList("dives") ?: mutableListOf()
         }
+
+        // Log the number of dives loaded to ensure it's working
+        Log.d("MyDivesFragment", "Number of dives loaded: ${dives.size}")
     }
 
     override fun onCreateView(
@@ -46,17 +49,19 @@ class MyDivesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_my_dives, container, false)
 
         // Initialize views
-        divesListView = view.findViewById(R.id.divesListView)
+        divesRecyclerView = view.findViewById(R.id.divesRecyclerView)
         addDiveButton = view.findViewById(R.id.addDiveButton)
 
-        // Set up the adapter for the ListView
-        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, dives)
-        divesListView.adapter = adapter
+        // Set up the RecyclerView with a LinearLayoutManager
+        divesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Handle long click for dive deletion
-        divesListView.setOnItemLongClickListener { parent, view, position, id ->
-            showDeleteDiveDialog(position)
-            true
+        // Check if the list of dives is empty
+        if (dives.isEmpty()) {
+            Toast.makeText(requireContext(), "No dives available", Toast.LENGTH_SHORT).show()
+        } else {
+            // Set up the adapter for RecyclerView
+            adapter = DiveAdapter(dives) { dive, position -> onLongClickDive(dive, position) }
+            divesRecyclerView.adapter = adapter
         }
 
         // Set up "Add Dive" button click listener
@@ -66,6 +71,11 @@ class MyDivesFragment : Fragment() {
         }
 
         return view
+    }
+
+    // Handle long click for dive deletion
+    private fun onLongClickDive(dive: Dive, position: Int) {
+        showDeleteDiveDialog(position)
     }
 
     // Show a confirmation dialog to delete a dive
@@ -89,7 +99,7 @@ class MyDivesFragment : Fragment() {
 
         // Remove from list and update the adapter
         dives.removeAt(position)
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRemoved(position)
 
         Toast.makeText(requireContext(), "Dive deleted", Toast.LENGTH_SHORT).show()
     }
