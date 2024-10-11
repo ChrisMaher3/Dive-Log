@@ -5,31 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Fragment container for displaying different fragments -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <EditText
-            android:id="@+id/diveLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter dive location" />
-
-        <EditText
-            android:id="@+id/maxDepth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Max Depth (m)" />
-
-        <Button
-            android:id="@+id/saveDiveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save Dive" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation" /> <!-- Positioned above the navigation -->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
