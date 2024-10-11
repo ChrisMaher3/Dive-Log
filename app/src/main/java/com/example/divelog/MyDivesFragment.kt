@@ -2,20 +2,18 @@ package com.example.divelog
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
+import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.Toast
 
 class MyDivesFragment : Fragment() {
 
-    private lateinit var divesRecyclerView: RecyclerView
-    private lateinit var addDiveButton: Button
+    private lateinit var divesListView: ListView
+    private lateinit var sortButton: Button
 
     private var dives: MutableList<Dive> = mutableListOf()
     private lateinit var adapter: DiveAdapter
@@ -36,9 +34,6 @@ class MyDivesFragment : Fragment() {
         arguments?.let {
             dives = it.getParcelableArrayList("dives") ?: mutableListOf()
         }
-
-        // Log the number of dives loaded to ensure it's working
-        Log.d("MyDivesFragment", "Number of dives loaded: ${dives.size}")
     }
 
     override fun onCreateView(
@@ -49,33 +44,25 @@ class MyDivesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_my_dives, container, false)
 
         // Initialize views
-        divesRecyclerView = view.findViewById(R.id.divesRecyclerView)
-        addDiveButton = view.findViewById(R.id.addDiveButton)
+        divesListView = view.findViewById(R.id.divesListView)
+        sortButton = view.findViewById(R.id.sortButton)
 
-        // Set up the RecyclerView with a LinearLayoutManager
-        divesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Set up the custom adapter for the ListView
+        adapter = DiveAdapter(requireContext(), dives)
+        divesListView.adapter = adapter
 
-        // Check if the list of dives is empty
-        if (dives.isEmpty()) {
-            Toast.makeText(requireContext(), "No dives available", Toast.LENGTH_SHORT).show()
-        } else {
-            // Set up the adapter for RecyclerView
-            adapter = DiveAdapter(dives) { dive, position -> onLongClickDive(dive, position) }
-            divesRecyclerView.adapter = adapter
+        // Handle long click for dive deletion
+        divesListView.setOnItemLongClickListener { parent, view, position, id ->
+            showDeleteDiveDialog(position)
+            true
         }
 
-        // Set up "Add Dive" button click listener
-        addDiveButton.setOnClickListener {
-            // Navigate to the AddDiveFragment to add a new dive
-            (activity as MainActivity).loadFragment(AddDiveFragment())
+        // Set up sorting button click listener
+        sortButton.setOnClickListener {
+            showSortOptionsDialog()
         }
 
         return view
-    }
-
-    // Handle long click for dive deletion
-    private fun onLongClickDive(dive: Dive, position: Int) {
-        showDeleteDiveDialog(position)
     }
 
     // Show a confirmation dialog to delete a dive
@@ -99,8 +86,86 @@ class MyDivesFragment : Fragment() {
 
         // Remove from list and update the adapter
         dives.removeAt(position)
-        adapter.notifyItemRemoved(position)
+        adapter.notifyDataSetChanged()
 
         Toast.makeText(requireContext(), "Dive deleted", Toast.LENGTH_SHORT).show()
+    }
+
+    // Show sorting options dialog
+    private fun showSortOptionsDialog() {
+        val options = arrayOf("By Location", "By Depth", "By Duration", "By Date")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Sort Dives")
+            .setItems(options) { dialog, which ->
+                showSortOrderDialog(which)
+            }
+            .show()
+    }
+
+    // Show sort order options dialog (Ascending or Descending)
+    private fun showSortOrderDialog(sortIndex: Int) {
+        val orderOptions = arrayOf("Ascending", "Descending")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Sort Order")
+            .setItems(orderOptions) { dialog, orderIndex ->
+                when (orderIndex) {
+                    0 -> {
+                        // Ascending order
+                        when (sortIndex) {
+                            0 -> sortDivesByLocation(ascending = true)
+                            1 -> sortDivesByDepth(ascending = true)
+                            2 -> sortDivesByDuration(ascending = true)
+                            3 -> sortDivesByDate(ascending = true)
+                        }
+                    }
+                    1 -> {
+                        // Descending order
+                        when (sortIndex) {
+                            0 -> sortDivesByLocation(ascending = false)
+                            1 -> sortDivesByDepth(ascending = false)
+                            2 -> sortDivesByDuration(ascending = false)
+                            3 -> sortDivesByDate(ascending = false)
+                        }
+                    }
+                }
+            }
+            .show()
+    }
+
+    // Sorting methods
+    private fun sortDivesByLocation(ascending: Boolean) {
+        if (ascending) {
+            dives.sortBy { it.location }
+        } else {
+            dives.sortByDescending { it.location }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun sortDivesByDepth(ascending: Boolean) {
+        if (ascending) {
+            dives.sortBy { it.maxDepth }
+        } else {
+            dives.sortByDescending { it.maxDepth }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun sortDivesByDuration(ascending: Boolean) {
+        if (ascending) {
+            dives.sortBy { it.duration }
+        } else {
+            dives.sortByDescending { it.duration }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun sortDivesByDate(ascending: Boolean) {
+        if (ascending) {
+            dives.sortBy { it.date }
+        } else {
+            dives.sortByDescending { it.date }
+        }
+        adapter.notifyDataSetChanged()
     }
 }

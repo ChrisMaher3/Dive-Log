@@ -1,48 +1,44 @@
 package com.example.divelog
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 
-class DiveAdapter(
-    private val dives: List<Dive>,
-    private val onLongClick: (Dive, Int) -> Unit
-) : RecyclerView.Adapter<DiveAdapter.DiveViewHolder>() {
+class DiveAdapter(private val context: Context, private val dives: List<Dive>) : BaseAdapter() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiveViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.dive_item, parent, false)
-        return DiveViewHolder(itemView)
-    }
-
-    override fun onBindViewHolder(holder: DiveViewHolder, position: Int) {
-        val dive = dives[position]
-        holder.bind(dive)
-
-        // Set the long click listener for deleting a dive
-        holder.itemView.setOnLongClickListener {
-            onLongClick(dive, position)
-            true
-        }
-    }
-
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return dives.size
     }
 
-    class DiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val locationTextView: TextView = itemView.findViewById(R.id.locationTextView)
-        private val depthTextView: TextView = itemView.findViewById(R.id.depthTextView)
-        private val durationTextView: TextView = itemView.findViewById(R.id.durationTextView)
-        private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
+    override fun getItem(position: Int): Dive {
+        return dives[position]
+    }
 
-        fun bind(dive: Dive) {
-            locationTextView.text = dive.location
-            depthTextView.text = "${dive.maxDepth} m"
-            durationTextView.text = "${dive.duration} min"
-            dateTextView.text = dive.date
-        }
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.dive_list_item, parent, false)
+
+        // Get the Dive object for the current position
+        val dive = getItem(position)
+
+        // Find and populate the views with dive data
+        val locationTextView: TextView = view.findViewById(R.id.locationTextView)
+        val depthTextView: TextView = view.findViewById(R.id.depthTextView)
+        val durationTextView: TextView = view.findViewById(R.id.durationTextView)
+        val dateTextView: TextView = view.findViewById(R.id.dateTextView)
+
+        // Set dive data into the views
+        locationTextView.text = dive.location
+        depthTextView.text = "Depth: ${dive.maxDepth} m"
+        durationTextView.text = "Duration: ${dive.duration} min"
+        dateTextView.text = "Date: ${dive.date}"
+
+        return view
     }
 }
