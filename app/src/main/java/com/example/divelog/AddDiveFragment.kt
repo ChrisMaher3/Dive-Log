@@ -9,7 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-class addDiveFragment : Fragment() {
+class AddDiveFragment : Fragment() { // Fixed class name to start with a capital letter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,11 +31,17 @@ class addDiveFragment : Fragment() {
             val depth = maxDepth.text.toString().toFloatOrNull()
             val diveDuration = duration.text.toString().toIntOrNull() // Get duration input
 
+            // Validate the input fields
             if (location.isNotEmpty() && depth != null && diveDuration != null) {
                 val newDive = Dive(location, depth, diveDuration)
-                (activity as MainActivity).addDive(newDive) // Add the new dive to MainActivity's list
+                (activity as MainActivity).addDive(newDive) // Save the new dive to the database
 
                 Toast.makeText(requireContext(), "Dive Saved: $location, Depth: $depth m, Duration: $diveDuration min", Toast.LENGTH_SHORT).show()
+
+                // Optionally, clear the input fields after saving
+                diveLocation.text.clear()
+                maxDepth.text.clear()
+                duration.text.clear()
             } else {
                 Toast.makeText(requireContext(), "Please fill in all fields correctly", Toast.LENGTH_SHORT).show()
             }

@@ -9,15 +9,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private var dives: MutableList<Dive> = mutableListOf()
+    private lateinit var diveRepository: DiveRepository // Declare the DiveRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        diveRepository = DiveRepository(this) // Initialize the repository
+
         // Load the default fragment (AddDiveFragment) when the activity starts
         if (savedInstanceState == null) {
-            loadFragment(addDiveFragment()) // Load the AddDiveFragment as the default
+            loadFragment(AddDiveFragment()) // Load the AddDiveFragment as the default
         }
 
         // Set up the BottomNavigationView
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_add_dive -> {
-                    loadFragment(addDiveFragment()) // Load the AddDiveFragment when selected
+                    loadFragment(AddDiveFragment()) // Load the AddDiveFragment when selected
                     true
                 }
                 R.id.action_diver_planner -> {
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.action_my_dives -> {
-                    loadFragment(MyDivesFragment.newInstance(dives)) // Load the MyDivesFragment with the dives
+                    loadFragment(MyDivesFragment.newInstance(diveRepository.getAllDives())) // Load MyDivesFragment with dives from the database
                     true
                 }
                 R.id.action_profile -> {
@@ -62,9 +64,8 @@ class MainActivity : AppCompatActivity() {
         transaction.commit() // Commit the transaction to apply changes
     }
 
-    // Method to add a dive to the list
+    // Method to add a dive to the database
     fun addDive(dive: Dive) {
-        dives.add(dive)
+        diveRepository.addDive(dive) // Save the dive to the database
     }
 }
-
