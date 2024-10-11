@@ -6,18 +6,24 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/divesTextView"
+    <!-- ListView to display the list of dives -->
+    <ListView
+        android:id="@+id/divesListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="No dives recorded yet"
-        android:paddingBottom="8dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="multipleChoice"
+        android:listSelector="@android:color/holo_blue_light"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:paddingBottom="16dp"/>
 
+    <!-- Button for adding new dives -->
     <Button
         android:id="@+id/addDiveButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Dive" />
+        android:text="Add Dive"
+        android:textAllCaps="false" />
 
 </LinearLayout>

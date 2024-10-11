@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Function to load a specified fragment into the fragment container
-    private fun loadFragment(fragment: Fragment) {
+    fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment) // Replace the existing fragment
         transaction.addToBackStack(null) // Optional: Add this transaction to the back stack for navigation
