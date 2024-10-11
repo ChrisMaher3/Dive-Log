@@ -39,8 +39,10 @@ class MyDivesFragment : Fragment() {
         // Find the TextView to display dive information
         val divesTextView: TextView = view.findViewById(R.id.divesTextView)
 
-        // Format and display the dive details in the TextView
-        divesTextView.text = dives.joinToString("\n") { "${it.location} - ${it.maxDepth}m - ${it.duration}min" }
+        // Format and display the dive details in the TextView, including date
+        divesTextView.text = dives.joinToString("\n") {
+            "${it.location} - ${it.maxDepth}m - ${it.duration}min - Date: ${it.date}"
+        }
 
         return view
     }

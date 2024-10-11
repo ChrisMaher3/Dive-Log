@@ -23,6 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Dive Duration (min)" />
+    <TextView
+        android:id="@+id/diveDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Dive Date"
+        android:padding="16dp"
+        android:background="@android:color/darker_gray"
+        android:clickable="true"
+        android:focusable="true"/>
+
 
     <Button
         android:id="@+id/saveDiveButton"
