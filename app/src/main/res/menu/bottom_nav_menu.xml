@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_diver_planner"
+        android:icon="@drawable/scuba"
+        android:title="Diver Planner" />
+
+    <item
+        android:id="@+id/action_my_dives"
+        android:icon="@drawable/hearth"
+        android:title="My Dives" />
+
+    <item
+        android:id="@+id/action_add_dive"
+        android:icon="@drawable/add_circle"
+        android:title="Add Dive" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/settings"
+        android:title="Settings" />
+</menu>
