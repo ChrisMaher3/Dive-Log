@@ -93,12 +93,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total Dives"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -127,12 +121,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Unique Locations"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -161,12 +149,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Max Depth"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -195,12 +177,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total Time Diving"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -229,12 +205,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Average Depth"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -263,12 +233,7 @@
                         android:textStyle="bold"
                         android:textColor="@color/textColor" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total Dive Days"
-                        android:textSize="12sp"
-                        android:textColor="@color/textColor" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
