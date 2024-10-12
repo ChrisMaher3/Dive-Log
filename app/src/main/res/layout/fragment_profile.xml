@@ -1,25 +1,134 @@
-<!-- res/layout/fragment_profile.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Profile Image at the top -->
     <ImageView
         android:id="@+id/profileImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/circle_background"
-    android:scaleType="centerCrop"
-    android:clickable="true"
-    android:focusable="true" />
+        android:scaleType="centerCrop"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="24dp" />
 
+    <!-- Name EditText below the profile image -->
     <EditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/profileImageView"
         android:layout_marginTop="16dp"
-        android:hint="Enter your name" />
+        android:hint="Enter your name"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <!-- Stats Section (Vertical Layout) -->
+    <LinearLayout
+        android:id="@+id/statsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/nameEditText"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+
+        <!-- Total Dives -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/totalDivesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Dives"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Unique Locations -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/uniqueLocationsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unique Locations"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Max Depth -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/maxDepthTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max Depth"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Total Time Diving -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/totalTimeDivingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0h 0min"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Time Diving"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

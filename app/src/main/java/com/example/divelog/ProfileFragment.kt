@@ -3,7 +3,6 @@ package com.example.divelog
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,35 +10,50 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import java.util.Locale
 
 class ProfileFragment : Fragment() {
 
     private lateinit var profileImageView: ImageView
     private lateinit var nameEditText: EditText
+    private lateinit var totalDivesTextView: TextView
+    private lateinit var uniqueLocationsTextView: TextView
+    private lateinit var maxDepthTextView: TextView
+    private lateinit var totalTimeDivingTextView: TextView
+
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImageUri: Uri? = null
-
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var diveRepository: DiveRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-
-        // Initialize SharedPreferences
-        sharedPreferences = requireActivity().getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE)
 
         // Initialize views
         profileImageView = view.findViewById(R.id.profileImageView)
         nameEditText = view.findViewById(R.id.nameEditText)
+        totalDivesTextView = view.findViewById(R.id.totalDivesTextView)
+        uniqueLocationsTextView = view.findViewById(R.id.uniqueLocationsTextView)
+        maxDepthTextView = view.findViewById(R.id.maxDepthTextView)
+        totalTimeDivingTextView = view.findViewById(R.id.totalTimeDivingTextView)
 
-        // Load saved profile data (name and image)
-        loadProfileData()
+        // Initialize dive repository
+        diveRepository = DiveRepository(requireContext())
 
-        // Set click listener to upload a new profile picture
+        // Load the profile picture and saved data
+        loadProfileImage()
+        loadSavedProfile()
+
+        // Load dive statistics from the repository
+        loadDiveStats()
+
+        // Set click listener on the profile image view to choose a new image
         profileImageView.setOnClickListener {
             openImageChooser()
         }
@@ -47,19 +61,34 @@ class ProfileFragment : Fragment() {
         return view
     }
 
-    private fun loadProfileData() {
-        // Load name from SharedPreferences
-        val savedName = sharedPreferences.getString("user_name", "")
-        nameEditText.setText(savedName)
+    // Load saved profile picture or default using Glide
+    private fun loadProfileImage() {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val savedImageUri = sharedPref.getString("profile_image_uri", null)
 
-        // Load profile picture URI from SharedPreferences
-        val savedImageUriString = sharedPreferences.getString("profile_image_uri", null)
-        val savedImageUri = savedImageUriString?.let { Uri.parse(it) }
-
-        // Load image using Glide, or a placeholder if not available
-        loadProfileImageFromUri(savedImageUri)
+        if (savedImageUri != null) {
+            // Load the saved image URI using Glide
+            loadProfileImageFromUri(Uri.parse(savedImageUri))
+        } else {
+            // Load a default profile image if no image was saved
+            Glide.with(this)
+                .load(R.drawable.face) // Default image
+                .circleCrop()
+                .into(profileImageView)
+        }
     }
 
+    // Load profile image from URI using Glide
+    private fun loadProfileImageFromUri(imageUri: Uri?) {
+        Glide.with(this)
+            .load(imageUri)
+            .circleCrop()
+            .placeholder(R.drawable.face) // Optional: Placeholder while loading
+            .error(R.drawable.face) // Optional: Error image if loading fails
+            .into(profileImageView)
+    }
+
+    // Opens the image chooser for profile image
     private fun openImageChooser() {
         val intent = Intent()
         intent.type = "image/*"
@@ -67,46 +96,69 @@ class ProfileFragment : Fragment() {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
+    // Handling the image picker result
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
-            loadProfileImageFromUri(selectedImageUri)
-
-            // Save the selected image URI to SharedPreferences
-            saveProfileImageUri(selectedImageUri)
+            profileImageView.setImageURI(selectedImageUri) // Set the selected image to the ImageView
+            saveProfileImage(selectedImageUri) // Save the image URI
+            loadProfileImageFromUri(selectedImageUri) // Reload using Glide
         }
     }
 
-    private fun loadProfileImageFromUri(imageUri: Uri?) {
-        Glide.with(this)
-            .load(imageUri)
-            .circleCrop()
-            .placeholder(R.drawable.face) // Placeholder image
-            .error(R.drawable.face) // Error image
-            .into(profileImageView)
-    }
-
-    private fun saveProfileImageUri(uri: Uri?) {
-        // Save the URI as a string in SharedPreferences
-        with(sharedPreferences.edit()) {
-            putString("profile_image_uri", uri?.toString())
+    // Save profile image URI to shared preferences
+    private fun saveProfileImage(imageUri: Uri?) {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("profile_image_uri", imageUri.toString())
             apply()
         }
     }
 
+    // Load profile name from shared preferences
+    private fun loadSavedProfile() {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val savedName = sharedPref.getString("profile_name", "")
+        nameEditText.setText(savedName)
+    }
+
+    // Save profile name when user exits the screen
     override fun onPause() {
         super.onPause()
-        // Save the user's name when the fragment is paused
-        saveUserName()
+        saveProfileName()
     }
 
-    private fun saveUserName() {
-        // Save the user's name in SharedPreferences
-        val userName = nameEditText.text.toString()
-        with(sharedPreferences.edit()) {
-            putString("user_name", userName)
+    private fun saveProfileName() {
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("profile_name", nameEditText.text.toString())
             apply()
         }
+    }
+
+    // Load dive statistics from the repository
+    private fun loadDiveStats() {
+        val dives = diveRepository.getAllDives()
+
+        // Calculate total dives
+        val totalDives = dives.size
+
+        // Calculate total unique locations (case-insensitive)
+        val uniqueLocations = dives.map { it.location.lowercase(Locale.getDefault()) }.distinct().size
+
+        // Calculate max depth
+        val maxDepth = dives.maxOfOrNull { it.maxDepth } ?: 0f
+
+        // Calculate total time diving (in minutes)
+        val totalTimeInMinutes = dives.sumOf { it.duration }
+        val totalHours = totalTimeInMinutes / 60
+        val totalMinutes = totalTimeInMinutes % 60
+
+        // Update the TextViews with the stats
+        totalDivesTextView.text = "Total Dives: $totalDives"
+        uniqueLocationsTextView.text = "Unique Locations: $uniqueLocations"
+        maxDepthTextView.text = "Max Depth: ${String.format("%.1f", maxDepth)}m"
+        totalTimeDivingTextView.text = "Total Dive Time: ${totalHours}h ${totalMinutes}min"
     }
 }
