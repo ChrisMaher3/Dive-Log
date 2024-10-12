@@ -1,0 +1,6 @@
+<!-- res/drawable/circular_background_colored.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/circleBackgroundColor" /> <!-- Background color -->
+    <corners android:radius="50dp" /> <!-- Make it circular -->
+    <size android:width="130dp" android:height="130dp" /> <!-- Set size to slightly larger than the ImageView -->
+</shape>
