@@ -1,7 +1,9 @@
 package com.example.divelog
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,17 +21,25 @@ class ProfileFragment : Fragment() {
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImageUri: Uri? = null
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
+        // Initialize SharedPreferences
+        sharedPreferences = requireActivity().getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE)
+
+        // Initialize views
         profileImageView = view.findViewById(R.id.profileImageView)
         nameEditText = view.findViewById(R.id.nameEditText)
 
-        loadProfileImage()
+        // Load saved profile data (name and image)
+        loadProfileData()
 
+        // Set click listener to upload a new profile picture
         profileImageView.setOnClickListener {
             openImageChooser()
         }
@@ -37,15 +47,17 @@ class ProfileFragment : Fragment() {
         return view
     }
 
-    private fun loadProfileImage() {
-        val imageUrl = "https://example.com/path/to/profile/image.jpg" // Default or previously uploaded image URL
+    private fun loadProfileData() {
+        // Load name from SharedPreferences
+        val savedName = sharedPreferences.getString("user_name", "")
+        nameEditText.setText(savedName)
 
-        Glide.with(this)
-            .load(imageUrl)
-            .circleCrop() // Crop the image into a circle
-            .placeholder(R.drawable.face) // Optional: Placeholder while loading
-            .error(R.drawable.face) // Optional: Error image if loading fails
-            .into(profileImageView)
+        // Load profile picture URI from SharedPreferences
+        val savedImageUriString = sharedPreferences.getString("profile_image_uri", null)
+        val savedImageUri = savedImageUriString?.let { Uri.parse(it) }
+
+        // Load image using Glide, or a placeholder if not available
+        loadProfileImageFromUri(savedImageUri)
     }
 
     private fun openImageChooser() {
@@ -59,20 +71,42 @@ class ProfileFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
-            loadProfileImageFromUri(selectedImageUri) // Load the image using Glide
+            loadProfileImageFromUri(selectedImageUri)
+
+            // Save the selected image URI to SharedPreferences
+            saveProfileImageUri(selectedImageUri)
         }
     }
 
     private fun loadProfileImageFromUri(imageUri: Uri?) {
         Glide.with(this)
             .load(imageUri)
-            .circleCrop() // Ensure it's cropped into a circle
-            .placeholder(R.drawable.face) // Optional: Placeholder while loading
-            .error(R.drawable.face) // Optional: Error image if loading fails
+            .circleCrop()
+            .placeholder(R.drawable.face) // Placeholder image
+            .error(R.drawable.face) // Error image
             .into(profileImageView)
     }
 
-    private fun uploadImageToServer(imageUri: Uri?) {
-        // Implement the logic to upload the image to your server or storage
+    private fun saveProfileImageUri(uri: Uri?) {
+        // Save the URI as a string in SharedPreferences
+        with(sharedPreferences.edit()) {
+            putString("profile_image_uri", uri?.toString())
+            apply()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Save the user's name when the fragment is paused
+        saveUserName()
+    }
+
+    private fun saveUserName() {
+        // Save the user's name in SharedPreferences
+        val userName = nameEditText.text.toString()
+        with(sharedPreferences.edit()) {
+            putString("user_name", userName)
+            apply()
+        }
     }
 }
