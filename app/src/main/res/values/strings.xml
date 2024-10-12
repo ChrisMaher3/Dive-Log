@@ -1,6 +1,7 @@
 <!-- res/values/strings.xml -->
 <resources>
     <string name="app_name">Dive Log</string>
-    <string name="profile_picture">Profile Picture</string> <!-- Add this line -->
+    <string name="profile_picture">Profile Picture</string>
+    <string name="certification_image">Certification Image</string>
     <!-- Add other string resources here -->
 </resources>

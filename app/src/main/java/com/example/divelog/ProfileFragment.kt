@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,8 +24,9 @@ class ProfileFragment : Fragment() {
     private lateinit var uniqueLocationsTextView: TextView
     private lateinit var maxDepthTextView: TextView
     private lateinit var totalTimeDivingTextView: TextView
-    private lateinit var averageDepthTextView: TextView  // New TextView for average depth
-    private lateinit var totalDiveDaysTextView: TextView  // New TextView for total dive days
+    private lateinit var averageDepthTextView: TextView // New TextView for average depth
+    private lateinit var totalDiveDaysTextView: TextView // New TextView for total dive days
+    private lateinit var viewCertificationsButton: Button // Button to view certifications
 
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImageUri: Uri? = null
@@ -44,8 +46,9 @@ class ProfileFragment : Fragment() {
         uniqueLocationsTextView = view.findViewById(R.id.uniqueLocationsTextView)
         maxDepthTextView = view.findViewById(R.id.maxDepthTextView)
         totalTimeDivingTextView = view.findViewById(R.id.totalTimeDivingTextView)
-        averageDepthTextView = view.findViewById(R.id.averageDepthTextView)  // Initialize new view
-        totalDiveDaysTextView = view.findViewById(R.id.totalDiveDaysTextView)  // Initialize new view
+        averageDepthTextView = view.findViewById(R.id.averageDepthTextView) // Initialize new view
+        totalDiveDaysTextView = view.findViewById(R.id.totalDiveDaysTextView) // Initialize new view
+        viewCertificationsButton = view.findViewById(R.id.viewCertificationsButton) // Initialize button
 
         // Initialize dive repository
         diveRepository = DiveRepository(requireContext())
@@ -60,6 +63,12 @@ class ProfileFragment : Fragment() {
         // Set click listener on the profile image view to choose a new image
         profileImageView.setOnClickListener {
             openImageChooser()
+        }
+
+        // Set click listener for the "View Certifications" button
+        viewCertificationsButton.setOnClickListener {
+            val intent = Intent(requireContext(), CertificationsListActivity::class.java)
+            startActivity(intent)
         }
 
         return view
@@ -174,7 +183,7 @@ class ProfileFragment : Fragment() {
         uniqueLocationsTextView.text = "Unique Locations: $uniqueLocations"
         maxDepthTextView.text = "Max Depth: ${String.format("%.1f", maxDepth)}m"
         totalTimeDivingTextView.text = "Total Dive Time: ${totalHours}h ${totalMinutes}min"
-        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}m"  // Update new view
-        totalDiveDaysTextView.text = "Total Dive Days: $totalDiveDays"  // Update new view
+        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}m" // Update new view
+        totalDiveDaysTextView.text = "Total Dive Days: $totalDiveDays" // Update new view
     }
 }

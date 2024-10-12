@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Add the CertificationsActivity here -->
+        <activity android:name=".CertificationsListActivity" />
+        <activity android:name=".CertificationsActivity" />
+
     </application>
 
 </manifest>
