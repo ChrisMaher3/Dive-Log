@@ -50,15 +50,9 @@
                 android:id="@+id/totalDivesTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="Total Dives: 0"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total Dives"
-                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Unique Locations -->
@@ -73,15 +67,9 @@
                 android:id="@+id/uniqueLocationsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="Unique Locations: 0"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Unique Locations"
-                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Max Depth -->
@@ -96,15 +84,9 @@
                 android:id="@+id/maxDepthTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="Max Depth: 0m"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Max Depth"
-                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Total Time Diving -->
@@ -118,15 +100,9 @@
                 android:id="@+id/totalTimeDivingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0h 0min"
+                android:text="Total Time Diving: 0h 0min"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total Time Diving"
-                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>

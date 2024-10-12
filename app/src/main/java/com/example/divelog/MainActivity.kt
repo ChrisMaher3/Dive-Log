@@ -17,9 +17,9 @@ class MainActivity : AppCompatActivity() {
 
         diveRepository = DiveRepository(this) // Initialize the repository
 
-        // Load the default fragment (AddDiveFragment) when the activity starts
+        // Load the default fragment (ProfileFragment) when the activity starts
         if (savedInstanceState == null) {
-            loadFragment(AddDiveFragment()) // Load the AddDiveFragment as the default
+            loadFragment(ProfileFragment()) // Load the ProfileFragment as the default
         }
 
         // Set up the BottomNavigationView
