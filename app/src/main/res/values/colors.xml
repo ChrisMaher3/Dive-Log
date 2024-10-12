@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Your defined colors -->
+    <color name="primaryColor">#003B5C</color>
+    <color name="secondaryColor">#009CA6</color>
+    <color name="accentColor">#FF6F61</color>
+    <color name="backgroundColor">#E0F7FA</color>
+    <color name="textColor">#333333</color>
+
+    <!-- Additional colors needed to prevent errors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
