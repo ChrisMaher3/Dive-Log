@@ -2,13 +2,18 @@ package com.example.divelog
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class CertificationsActivity : AppCompatActivity() {
 
@@ -53,8 +58,11 @@ class CertificationsActivity : AppCompatActivity() {
         val title = titleEditText.text.toString()
         val date = dateEditText.text.toString()
 
+        // Save the selected image to internal storage
+        val imageUriString = saveImageToInternalStorage(selectedImageUri)
+
         // Create Certification object
-        val certification = Certification(title, date, selectedImageUri.toString())
+        val certification = Certification(title, date, imageUriString)
 
         // Add certification to the CertificationsListActivity
         val resultIntent = Intent().apply {
@@ -62,5 +70,23 @@ class CertificationsActivity : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
+    }
+
+    private fun saveImageToInternalStorage(uri: Uri?): String {
+        if (uri == null) return ""
+
+        val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        val fileName = "${System.currentTimeMillis()}.jpg" // Generate a unique filename
+        val file = File(filesDir, fileName)
+
+        try {
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return file.absolutePath // Return the file path
     }
 }
