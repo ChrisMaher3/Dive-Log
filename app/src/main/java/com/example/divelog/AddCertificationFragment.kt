@@ -1,22 +1,29 @@
 package com.example.divelog
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class AddCertificationFragment : Fragment() {
 
+    private lateinit var organizationEditText: EditText
+    private lateinit var yearEditText: EditText
     private lateinit var certificationNameEditText: EditText
-    private lateinit var certificationDateEditText: EditText
-    private lateinit var certificationAgencyEditText: EditText
-    private lateinit var saveCertificationButton: Button
+    private lateinit var uploadImageButton: Button
+    private lateinit var addCertificationButton: Button
+    private lateinit var certificationImageView: ImageView
 
-    private lateinit var certificationRepository: CertificationRepository
+    private var selectedImageUri: Uri? = null
+    private val PICK_IMAGE_REQUEST = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,41 +33,62 @@ class AddCertificationFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_certification, container, false)
 
         // Initialize views
+        organizationEditText = view.findViewById(R.id.organizationEditText)
+        yearEditText = view.findViewById(R.id.yearEditText)
         certificationNameEditText = view.findViewById(R.id.certificationNameEditText)
-        certificationDateEditText = view.findViewById(R.id.certificationDateEditText)
-        certificationAgencyEditText = view.findViewById(R.id.certificationAgencyEditText)
-        saveCertificationButton = view.findViewById(R.id.saveCertificationButton)
+        uploadImageButton = view.findViewById(R.id.uploadImageButton)
+        addCertificationButton = view.findViewById(R.id.addCertificationButton)
+        certificationImageView = view.findViewById(R.id.certificationImageView)
 
-        // Initialize repository
-        certificationRepository = CertificationRepository(requireContext())
+        // Set click listener for the upload image button
+        uploadImageButton.setOnClickListener {
+            openImageChooser()
+        }
 
-        // Set click listener for the save button
-        saveCertificationButton.setOnClickListener {
-            saveCertification()
+        // Set click listener for the add certification button
+        addCertificationButton.setOnClickListener {
+            addCertification()
         }
 
         return view
     }
 
-    private fun saveCertification() {
-        val name = certificationNameEditText.text.toString()
-        val date = certificationDateEditText.text.toString()
-        val agency = certificationAgencyEditText.text.toString()
+    private fun openImageChooser() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Certification Image"), PICK_IMAGE_REQUEST)
+    }
 
-        if (name.isBlank() || date.isBlank() || agency.isBlank()) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            selectedImageUri = data.data
+            certificationImageView.setImageURI(selectedImageUri) // Display the selected image
+        }
+    }
+
+    private fun addCertification() {
+        val organization = organizationEditText.text.toString()
+        val year = yearEditText.text.toString()
+        val certificationName = certificationNameEditText.text.toString()
+
+        // Validate input fields
+        if (organization.isBlank() || year.isBlank() || certificationName.isBlank()) {
             Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Create a new certification object
-        val certification = Certification(name, date, agency)
+        // Create the new Certification object with the image URI
+        val newCertification = Certification(certificationName, organization, year, selectedImageUri.toString())
 
-        // Save the certification to the repository
-        certificationRepository.addCertification(certification)
+        // Here you should save newCertification to your repository or pass it back to the previous fragment
+        // Example: certificationRepository.addCertification(newCertification)
 
-        Toast.makeText(requireContext(), "Certification added", Toast.LENGTH_SHORT).show()
+        // Notify the user and navigate back
+        Toast.makeText(requireContext(), "Certification added!", Toast.LENGTH_SHORT).show()
 
-        // Optionally, navigate back to the previous fragment
+        // Navigate back to the previous fragment
         requireActivity().supportFragmentManager.popBackStack()
     }
 }
