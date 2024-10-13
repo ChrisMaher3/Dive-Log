@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
-import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 
 class MyDivesFragment : Fragment() {
 
@@ -55,6 +55,17 @@ class MyDivesFragment : Fragment() {
         divesListView.setOnItemLongClickListener { parent, view, position, id ->
             showDeleteDiveDialog(position)
             true
+        }
+
+        // Handle single tap to show dive details
+        divesListView.setOnItemClickListener { parent, view, position, id ->
+            val selectedDive = dives[position]
+            val diveDetailFragment = DiveDetailFragment.newInstance(selectedDive)
+            // Navigate to DiveDetailFragment
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, diveDetailFragment)
+                .addToBackStack(null) // Add to back stack so user can navigate back
+                .commit()
         }
 
         // Set up sorting button click listener

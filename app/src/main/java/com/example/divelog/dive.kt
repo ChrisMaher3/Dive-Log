@@ -7,20 +7,32 @@ data class Dive(
     val location: String,
     val maxDepth: Float,
     val duration: Int,
-    val date: String
+    val date: String,
+    val diveBuddy: String? = null, // Make this optional
+    val weatherConditions: String? = null, // Make this optional
+    val visibility: Float? = null, // Make this optional
+    val isNightDive: Boolean = false // Make this optional
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readFloat(),
         parcel.readInt(),
-        parcel.readString() ?: ""
+        parcel.readString() ?: "",
+        parcel.readString(), // diveBuddy
+        parcel.readString(), // weatherConditions
+        parcel.readValue(Float::class.java.classLoader) as? Float, // visibility
+        parcel.readInt() == 1 // isNightDive (converts int to boolean)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(location)
         parcel.writeFloat(maxDepth)
         parcel.writeInt(duration)
-        parcel.writeString(date) // Make sure to include date
+        parcel.writeString(date)
+        parcel.writeString(diveBuddy) // Write diveBuddy
+        parcel.writeString(weatherConditions) // Write weatherConditions
+        parcel.writeValue(visibility) // Write visibility
+        parcel.writeInt(if (isNightDive) 1 else 0) // Write isNightDive
     }
 
     override fun describeContents(): Int {

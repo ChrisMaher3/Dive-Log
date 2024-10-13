@@ -1,42 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
 
-    <EditText
-        android:id="@+id/diveLocation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter dive location" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/maxDepth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Max Depth (m)" />
+        <!-- Section Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dive Information"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp"
+            android:textColor="@color/primaryColor" />
 
-    <EditText
-        android:id="@+id/diveDuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Dive Duration (min)" />
-    <TextView
-        android:id="@+id/diveDateTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Select Dive Date"
-        android:padding="16dp"
-        android:background="@android:color/darker_gray"
-        android:clickable="true"
-        android:focusable="true"/>
+        <!-- Dive Location -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dive Location"
+            android:layout_marginBottom="12dp">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/diveLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="text"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/saveDiveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Dive" />
-</LinearLayout>
+        <!-- Max Depth -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Max Depth (m)"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/maxDepth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dive Duration -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dive Duration (minutes)"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/diveDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dive Date -->
+        <TextView
+            android:id="@+id/diveDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/textColor"
+            android:layout_marginBottom="20dp"
+            android:text="Select Dive Date" />
+
+        <!-- Night Dive Switch -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="Additional Dive Info (Optional)"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Night Dive"
+            android:textSize="16sp"
+            android:textColor="@color/primaryColor" />
+        <Switch
+            android:id="@+id/nightDiveSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Section for optional details -->
+
+        <!-- Dive Buddy -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dive Buddy (Optional)"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/diveBuddy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="text"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Weather Conditions -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Weather Conditions (Optional)"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/weatherConditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Visibility -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Visibility (meters) (Optional)"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/visibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="@color/textColor"
+                android:backgroundTint="@color/secondaryColor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Save Dive Button -->
+        <Button
+            android:id="@+id/saveDiveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Dive"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:backgroundTint="@color/buttonBackgroundColor"
+            android:textColor="@color/buttonTextColor" />
+    </LinearLayout>
+</ScrollView>

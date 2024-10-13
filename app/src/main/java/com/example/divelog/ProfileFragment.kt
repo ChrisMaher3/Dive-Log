@@ -24,9 +24,9 @@ class ProfileFragment : Fragment() {
     private lateinit var uniqueLocationsTextView: TextView
     private lateinit var maxDepthTextView: TextView
     private lateinit var totalTimeDivingTextView: TextView
-    private lateinit var averageDepthTextView: TextView // New TextView for average depth
-    private lateinit var totalDiveDaysTextView: TextView // New TextView for total dive days
-    private lateinit var viewCertificationsButton: Button // Button to view certifications
+    private lateinit var averageDepthTextView: TextView
+    private lateinit var totalDiveDaysTextView: TextView
+    private lateinit var viewCertificationsButton: Button
 
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImageUri: Uri? = null
@@ -36,7 +36,6 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         // Initialize views
@@ -46,44 +45,42 @@ class ProfileFragment : Fragment() {
         uniqueLocationsTextView = view.findViewById(R.id.uniqueLocationsTextView)
         maxDepthTextView = view.findViewById(R.id.maxDepthTextView)
         totalTimeDivingTextView = view.findViewById(R.id.totalTimeDivingTextView)
-        averageDepthTextView = view.findViewById(R.id.averageDepthTextView) // Initialize new view
-        totalDiveDaysTextView = view.findViewById(R.id.totalDiveDaysTextView) // Initialize new view
-        viewCertificationsButton = view.findViewById(R.id.viewCertificationsButton) // Initialize button
+        averageDepthTextView = view.findViewById(R.id.averageDepthTextView)
+        totalDiveDaysTextView = view.findViewById(R.id.totalDiveDaysTextView)
+        viewCertificationsButton = view.findViewById(R.id.viewCertificationsButton)
 
         // Initialize dive repository
         diveRepository = DiveRepository(requireContext())
 
-        // Load the profile picture and saved data
+        // Load profile data
         loadProfileImage()
         loadSavedProfile()
-
-        // Load dive statistics from the repository
         loadDiveStats()
 
-        // Set click listener on the profile image view to choose a new image
+        // Profile image click listener
         profileImageView.setOnClickListener {
             openImageChooser()
         }
 
-        // Set click listener for the "View Certifications" button
+        // Navigate to certifications
         viewCertificationsButton.setOnClickListener {
-            val intent = Intent(requireContext(), CertificationsListActivity::class.java)
-            startActivity(intent)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ViewCertificationsFragment()) // Ensure this ID matches your container in activity
+                .addToBackStack(null)
+                .commit()
         }
 
         return view
     }
 
-    // Load saved profile picture or default using Glide
+    // Load profile image from URI using Glide
     private fun loadProfileImage() {
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val savedImageUri = sharedPref.getString("profile_image_uri", null)
 
         if (savedImageUri != null) {
-            // Load the saved image URI using Glide
             loadProfileImageFromUri(Uri.parse(savedImageUri))
         } else {
-            // Load a default profile image if no image was saved
             Glide.with(this)
                 .load(R.drawable.face) // Default image
                 .circleCrop()
@@ -183,7 +180,7 @@ class ProfileFragment : Fragment() {
         uniqueLocationsTextView.text = "Unique Locations: $uniqueLocations"
         maxDepthTextView.text = "Max Depth: ${String.format("%.1f", maxDepth)}m"
         totalTimeDivingTextView.text = "Total Dive Time: ${totalHours}h ${totalMinutes}min"
-        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}m" // Update new view
-        totalDiveDaysTextView.text = "Total Dive Days: $totalDiveDays" // Update new view
+        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}m"
+        totalDiveDaysTextView.text = "Total Dive Days: $totalDiveDays"
     }
 }

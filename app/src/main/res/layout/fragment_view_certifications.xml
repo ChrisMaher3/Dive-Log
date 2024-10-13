@@ -5,15 +5,16 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ListView
+        android:id="@+id/certificationsListView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
     <Button
         android:id="@+id/addCertificationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Certification" />
-
-    <LinearLayout
-        android:id="@+id/certificationsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:text="Add Certification"/>
 </LinearLayout>
+
