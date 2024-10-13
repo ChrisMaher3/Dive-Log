@@ -1,7 +1,7 @@
 package com.example.divelog
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,28 +15,25 @@ class ViewCertificationsFragment : Fragment() {
     private lateinit var addCertificationButton: Button
     private var certifications: MutableList<Certification> = mutableListOf()
     private lateinit var adapter: CertificationAdapter
+    private lateinit var databaseHelper: DiveDatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loadCertifications() // Load initial certifications
+        databaseHelper = DiveDatabaseHelper(requireContext()) // Initialize the database helper
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_view_certifications, container, false)
 
-        // Initialize views
         certificationsListView = view.findViewById(R.id.certificationsListView)
         addCertificationButton = view.findViewById(R.id.addCertificationButton)
 
-        // Set up the adapter for the ListView
         adapter = CertificationAdapter(requireContext(), certifications)
         certificationsListView.adapter = adapter
 
-        // Set click listener for the add certification button
         addCertificationButton.setOnClickListener {
             // Navigate to AddCertificationFragment
             requireActivity().supportFragmentManager.beginTransaction()
@@ -48,15 +45,19 @@ class ViewCertificationsFragment : Fragment() {
         return view
     }
 
-    private fun loadCertifications() {
-        // Sample certifications for testing (you may want to replace this with actual data)
-        certifications.add(Certification("Open Water Diver", "PADI", "2022", null))
-        certifications.add(Certification("Advanced Open Water Diver", "PADI", "2023", null))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadCertifications() // Load certifications after view is created
     }
 
-    // Function to refresh the list of certifications
-    fun addCertification(certification: Certification) {
-        certifications.add(certification)
-        adapter.notifyDataSetChanged() // Notify the adapter to refresh the ListView
+    internal fun loadCertifications() {
+        try {
+            certifications.clear() // Clear the list before loading
+            certifications.addAll(databaseHelper.getAllCertifications()) // Retrieve certifications from the database
+            adapter.notifyDataSetChanged() // Notify adapter of data change
+        } catch (e: Exception) {
+            Log.e("ViewCertFrag", "Error loading certifications: ${e.message}")
+            // Optionally, show an error message to the user
+        }
     }
 }

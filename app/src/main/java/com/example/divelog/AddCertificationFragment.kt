@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import android.util.Log
 
 class AddCertificationFragment : Fragment() {
 
@@ -80,15 +81,28 @@ class AddCertificationFragment : Fragment() {
         }
 
         // Create the new Certification object with the image URI
-        val newCertification = Certification(certificationName, organization, year, selectedImageUri.toString())
+        val newCertification = Certification(
+            name = certificationName,
+            organization = organization,
+            year = year,
+            imageUri = selectedImageUri?.toString()
+        )
 
-        // Here you should save newCertification to your repository or pass it back to the previous fragment
-        // Example: certificationRepository.addCertification(newCertification)
+        // Add certification to the database
+        val dbHelper = DiveDatabaseHelper(requireContext()) // Use the merged helper
+        try {
+            dbHelper.addCertification(newCertification)
 
-        // Notify the user and navigate back
-        Toast.makeText(requireContext(), "Certification added!", Toast.LENGTH_SHORT).show()
+            // Notify the user and navigate back
+            Toast.makeText(requireContext(), "Certification added!", Toast.LENGTH_SHORT).show()
+            val previousFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragment_container) as? ViewCertificationsFragment
+            previousFragment?.loadCertifications() // Refresh the list in the previous fragment
 
-        // Navigate back to the previous fragment
-        requireActivity().supportFragmentManager.popBackStack()
+            // Navigate back to the previous fragment
+            requireActivity().supportFragmentManager.popBackStack()
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error adding certification: ${e.message}", Toast.LENGTH_SHORT).show()
+            Log.e("AddCertFrag", "Error adding certification: ${e.message}")
+        }
     }
 }
