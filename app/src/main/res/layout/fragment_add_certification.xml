@@ -1,26 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/backgroundColor">
 
     <EditText
         android:id="@+id/organizationEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Organization" />
+        android:hint="Organization"
+        android:padding="10dp"
+        android:background="@color/secondaryColor"
+    android:textColor="@color/textColor"
+    android:textColorHint="@color/textColor" />
 
     <EditText
         android:id="@+id/yearEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Year" />
+        android:hint="Year"
+        android:padding="10dp"
+        android:background="@color/secondaryColor"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor" />
 
     <EditText
         android:id="@+id/certificationNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Certification Name" />
+        android:hint="Certification Name"
+        android:padding="10dp"
+        android:background="@color/secondaryColor"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/textColor" />
 
     <ImageView
         android:id="@+id/certificationImageView"
@@ -31,13 +45,17 @@
 
     <Button
         android:id="@+id/uploadImageButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload Image" />
+        android:text="Upload Image"
+        android:backgroundTint="@color/buttonBackgroundColor"
+    android:textColor="@color/buttonTextColor" />
 
     <Button
         android:id="@+id/addCertificationButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Certification" />
+        android:text="Add Certification"
+        android:backgroundTint="@color/buttonBackgroundColor"
+        android:textColor="@color/buttonTextColor" />
 </LinearLayout>
