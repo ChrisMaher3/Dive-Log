@@ -30,10 +30,8 @@ class AddCertificationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_add_certification, container, false)
 
-        // Initialize views
         organizationEditText = view.findViewById(R.id.organizationEditText)
         yearEditText = view.findViewById(R.id.yearEditText)
         certificationNameEditText = view.findViewById(R.id.certificationNameEditText)
@@ -41,12 +39,10 @@ class AddCertificationFragment : Fragment() {
         addCertificationButton = view.findViewById(R.id.addCertificationButton)
         certificationImageView = view.findViewById(R.id.certificationImageView)
 
-        // Set click listener for the upload image button
         uploadImageButton.setOnClickListener {
             openImageChooser()
         }
 
-        // Set click listener for the add certification button
         addCertificationButton.setOnClickListener {
             addCertification()
         }
@@ -65,7 +61,7 @@ class AddCertificationFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
-            certificationImageView.setImageURI(selectedImageUri) // Display the selected image
+            certificationImageView.setImageURI(selectedImageUri)
         }
     }
 
@@ -74,35 +70,46 @@ class AddCertificationFragment : Fragment() {
         val year = yearEditText.text.toString()
         val certificationName = certificationNameEditText.text.toString()
 
-        // Validate input fields
         if (organization.isBlank() || year.isBlank() || certificationName.isBlank()) {
             Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Create the new Certification object with the image URI
+        try {
+            val yearInt = year.toInt()
+            if (yearInt < 1900 || yearInt > 2100) {
+                Toast.makeText(requireContext(), "Please enter a valid year", Toast.LENGTH_SHORT).show()
+                return
+            }
+        } catch (e: NumberFormatException) {
+            Toast.makeText(requireContext(), "Please enter a numeric year", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val imageUriString = selectedImageUri?.toString() ?: ""
+
         val newCertification = Certification(
             name = certificationName,
             organization = organization,
             year = year,
-            imageUri = selectedImageUri?.toString()
+            imageUri = imageUriString
         )
 
-        // Add certification to the database
-        val dbHelper = DiveDatabaseHelper(requireContext()) // Use the merged helper
+        val dbHelper = DiveDatabaseHelper(requireContext())
+
         try {
-            dbHelper.addCertification(newCertification)
+            dbHelper.addCertification(newCertification) // Assuming this doesn't return a value
 
-            // Notify the user and navigate back
             Toast.makeText(requireContext(), "Certification added!", Toast.LENGTH_SHORT).show()
-            val previousFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragment_container) as? ViewCertificationsFragment
-            previousFragment?.loadCertifications() // Refresh the list in the previous fragment
 
-            // Navigate back to the previous fragment
+            val previousFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragment_container) as? ViewCertificationsFragment
+            previousFragment?.loadCertifications()
+
             requireActivity().supportFragmentManager.popBackStack()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error adding certification: ${e.message}", Toast.LENGTH_SHORT).show()
-            Log.e("AddCertFrag", "Error adding certification: ${e.message}")
+            Toast.makeText(requireContext(), "Failed to add certification", Toast.LENGTH_SHORT).show()
+            Log.e("AddCertification", "Error adding certification", e)
         }
     }
+
 }

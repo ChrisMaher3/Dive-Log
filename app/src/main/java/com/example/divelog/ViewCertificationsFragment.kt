@@ -1,43 +1,44 @@
 package com.example.divelog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ListView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class ViewCertificationsFragment : Fragment() {
 
-    private lateinit var certificationsListView: ListView
-    private lateinit var addCertificationButton: Button
-    private var certifications: MutableList<Certification> = mutableListOf()
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CertificationAdapter
-    private lateinit var databaseHelper: DiveDatabaseHelper
+    private lateinit var certifications: List<Certification>
+    private lateinit var addCertificationButton: Button
+    private lateinit var dbHelper: DiveDatabaseHelper
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        databaseHelper = DiveDatabaseHelper(requireContext()) // Initialize the database helper
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_view_certifications, container, false)
 
-        certificationsListView = view.findViewById(R.id.certificationsListView)
+        recyclerView = view.findViewById(R.id.certificationRecyclerView)
         addCertificationButton = view.findViewById(R.id.addCertificationButton)
 
-        adapter = CertificationAdapter(requireContext(), certifications)
-        certificationsListView.adapter = adapter
+        dbHelper = DiveDatabaseHelper(requireContext())
+
+        loadCertifications()
+
+        adapter = CertificationAdapter(certifications, requireContext()) { certification ->
+            val dialog = DeleteConfirmationDialogFragment.newInstance(certification)
+            dialog.show(parentFragmentManager, "DeleteConfirmationDialogFragment")
+        }
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
 
         addCertificationButton.setOnClickListener {
-            // Navigate to AddCertificationFragment
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AddCertificationFragment())
+            val fragment = AddCertificationFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -45,19 +46,10 @@ class ViewCertificationsFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loadCertifications() // Load certifications after view is created
-    }
-
-    internal fun loadCertifications() {
-        try {
-            certifications.clear() // Clear the list before loading
-            certifications.addAll(databaseHelper.getAllCertifications()) // Retrieve certifications from the database
-            adapter.notifyDataSetChanged() // Notify adapter of data change
-        } catch (e: Exception) {
-            Log.e("ViewCertFrag", "Error loading certifications: ${e.message}")
-            // Optionally, show an error message to the user
+    fun loadCertifications() {
+        certifications = dbHelper.getAllCertifications()
+        if (::adapter.isInitialized) {
+            adapter.updateData(certifications)
         }
     }
 }

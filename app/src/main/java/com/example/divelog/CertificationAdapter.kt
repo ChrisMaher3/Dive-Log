@@ -4,29 +4,43 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
-class CertificationAdapter(context: Context, private val certifications: List<Certification>) :
-    ArrayAdapter<Certification>(context, 0, certifications) {
+class CertificationAdapter(
+    private var certifications: List<Certification>,
+    private val context: Context,
+    private val onItemClicked: (Certification) -> Unit
+) : RecyclerView.Adapter<CertificationAdapter.ViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.item_certification, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val certification = certifications[position]
+        holder.nameTextView.text = certification.name
+        holder.organizationTextView.text = certification.organization
+        holder.yearTextView.text = certification.year
 
-        // Check if an existing view is being reused, otherwise inflate the view
-        val listItemView = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_certification, parent, false)
+        holder.itemView.setOnClickListener {
+            onItemClicked(certification)
+        }
+    }
 
-        // Lookup view for data population
-        val nameTextView = listItemView.findViewById<TextView>(R.id.certificationNameTextView)
-        val organizationTextView = listItemView.findViewById<TextView>(R.id.certificationOrganizationTextView)
-        val yearTextView = listItemView.findViewById<TextView>(R.id.certificationYearTextView)
+    override fun getItemCount(): Int = certifications.size
 
-        // Populate the data into the template view using the data object
-        nameTextView.text = certification.name
-        organizationTextView.text = certification.organization
-        yearTextView.text = certification.year
+    fun updateData(newCertifications: List<Certification>) {
+        certifications = newCertifications
+        notifyDataSetChanged()
+    }
 
-        // Return the completed view to render on screen
-        return listItemView
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameTextView: TextView = itemView.findViewById(R.id.certificationNameTextView)
+        val organizationTextView: TextView = itemView.findViewById(R.id.certificationOrganizationTextView)
+        val yearTextView: TextView = itemView.findViewById(R.id.certificationYearTextView)
+        val imageView: ImageView = itemView.findViewById(R.id.certificationImageView)
     }
 }
