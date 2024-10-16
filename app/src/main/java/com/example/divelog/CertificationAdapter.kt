@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class CertificationAdapter(
     private var certifications: List<Certification>,
@@ -24,6 +25,13 @@ class CertificationAdapter(
         holder.nameTextView.text = certification.name
         holder.organizationTextView.text = certification.organization
         holder.yearTextView.text = certification.year
+
+        // Load the image using Glide
+        Glide.with(context)
+            .load(certification.imageUri)
+            .placeholder(R.drawable.cert) // Show a placeholder while loading
+            .error(R.drawable.cert) // Show an error image if loading fails
+            .into(holder.imageView)
 
         holder.itemView.setOnClickListener {
             onItemClicked(certification)
