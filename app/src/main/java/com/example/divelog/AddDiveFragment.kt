@@ -22,8 +22,7 @@ class AddDiveFragment : Fragment() {
     private var isNightDive: Boolean = false
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddDiveBinding.inflate(inflater, container, false)
@@ -77,11 +76,14 @@ class AddDiveFragment : Fragment() {
         val weatherConditions = binding.weatherConditions.text.toString()
         val visibility = binding.visibility.text.toString().toFloatOrNull()
 
+        // Get water temperature value
+        val waterTemperature = binding.waterTemperature.text.toString().toFloatOrNull()
+
         if (location.isNotEmpty() && depth != null && diveDuration != null && selectedDate.isNotEmpty()) {
-            val newDive = Dive(location, depth, diveDuration, selectedDate, diveBuddy, weatherConditions, visibility, isNightDive)
+            val newDive = Dive(location, depth, diveDuration, selectedDate, diveBuddy, weatherConditions, visibility, waterTemperature, isNightDive)
             (activity as MainActivity).addDive(newDive)
 
-            Toast.makeText(requireContext(), "Dive Saved: $location, Depth: $depth m, Duration: $diveDuration min on $selectedDate", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Dive Saved: $location, Depth: $depth m, Duration: $diveDuration min, Water Temp: $waterTemperature°C on $selectedDate", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(requireContext(), "Please fill in all required fields correctly", Toast.LENGTH_SHORT).show()
         }

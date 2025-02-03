@@ -11,8 +11,10 @@ data class Dive(
     val diveBuddy: String? = null, // Make this optional
     val weatherConditions: String? = null, // Make this optional
     val visibility: Float? = null, // Make this optional
+    val waterTemperature: Float? = null, // Add this field for water temperature
     val isNightDive: Boolean = false // Make this optional
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readFloat(),
@@ -21,6 +23,7 @@ data class Dive(
         parcel.readString(), // diveBuddy
         parcel.readString(), // weatherConditions
         parcel.readValue(Float::class.java.classLoader) as? Float, // visibility
+        parcel.readValue(Float::class.java.classLoader) as? Float, // waterTemperature
         parcel.readInt() == 1 // isNightDive (converts int to boolean)
     )
 
@@ -32,6 +35,7 @@ data class Dive(
         parcel.writeString(diveBuddy) // Write diveBuddy
         parcel.writeString(weatherConditions) // Write weatherConditions
         parcel.writeValue(visibility) // Write visibility
+        parcel.writeValue(waterTemperature) // Write waterTemperature
         parcel.writeInt(if (isNightDive) 1 else 0) // Write isNightDive
     }
 

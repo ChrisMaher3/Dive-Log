@@ -5,12 +5,13 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.preference.PreferenceManager
 
-class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         const val DATABASE_NAME = "dive_log.db" // Database name
-        const val DATABASE_VERSION = 2 // Incremented version to handle upgrades
+        const val DATABASE_VERSION = 3 // Incremented version to handle upgrades
 
         // Dives table definition
         const val TABLE_DIVES = "dives"
@@ -22,6 +23,7 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         const val COLUMN_BUDDY = "buddy" // New column for buddy name
         const val COLUMN_WEATHER_CONDITIONS = "weather_conditions" // New column for weather conditions
         const val COLUMN_VISIBILITY = "visibility" // New column for visibility
+        const val COLUMN_WATER_TEMPERATURE = "water_temperature" // New column for water temperature
         const val COLUMN_IS_NIGHT_DIVE = "is_night_dive" // New column for night dive status
 
         // Certifications table definition
@@ -45,6 +47,7 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
                 $COLUMN_BUDDY TEXT,                     
                 $COLUMN_WEATHER_CONDITIONS TEXT,       
                 $COLUMN_VISIBILITY REAL,                
+                $COLUMN_WATER_TEMPERATURE REAL,        -- Added water temperature column
                 $COLUMN_IS_NIGHT_DIVE INTEGER NOT NULL DEFAULT 0 
             )
         """.trimIndent()
@@ -154,6 +157,7 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             put(COLUMN_BUDDY, dive.diveBuddy) // New property
             put(COLUMN_WEATHER_CONDITIONS, dive.weatherConditions) // New property
             put(COLUMN_VISIBILITY, dive.visibility) // New property
+            put(COLUMN_WATER_TEMPERATURE, dive.waterTemperature) // New property for water temperature
             put(COLUMN_IS_NIGHT_DIVE, if (dive.isNightDive) 1 else 0) // New property
         }
         db.insert(TABLE_DIVES, null, values)
@@ -166,6 +170,10 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         val db = readableDatabase
         val cursor = db.query(TABLE_DIVES, null, null, null, null, null, null)
 
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val isMeters = sharedPreferences.getBoolean("isMeters", true)
+        val isCelsius = sharedPreferences.getBoolean("isCelsius", true)
+
         if (cursor.moveToFirst()) {
             do {
                 // Get the column indices
@@ -176,20 +184,31 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
                 val buddyIndex = cursor.getColumnIndex(COLUMN_BUDDY)
                 val weatherConditionsIndex = cursor.getColumnIndex(COLUMN_WEATHER_CONDITIONS)
                 val visibilityIndex = cursor.getColumnIndex(COLUMN_VISIBILITY)
+                val waterTemperatureIndex = cursor.getColumnIndex(COLUMN_WATER_TEMPERATURE) // Added
                 val isNightDiveIndex = cursor.getColumnIndex(COLUMN_IS_NIGHT_DIVE)
 
                 // Check that indices are valid and fetch data
                 if (locationIndex != -1 && maxDepthIndex != -1 && durationIndex != -1 && dateIndex != -1) {
                     val location = cursor.getString(locationIndex)
-                    val maxDepth = cursor.getFloat(maxDepthIndex)
+                    var maxDepth = cursor.getFloat(maxDepthIndex)
                     val duration = cursor.getInt(durationIndex)
                     val date = cursor.getString(dateIndex)
                     val buddy = cursor.getString(buddyIndex) // New property
                     val weatherConditions = cursor.getString(weatherConditionsIndex) // New property
                     val visibility = cursor.getFloat(visibilityIndex) // New property
+                    var waterTemperature = cursor.getFloat(waterTemperatureIndex) // New property
                     val isNightDive = cursor.getInt(isNightDiveIndex) == 1 // New property
 
-                    dives.add(Dive(location, maxDepth, duration, date, buddy, weatherConditions, visibility, isNightDive))
+                    // Apply conversions based on the user's preferences
+                    if (!isMeters) {
+                        maxDepth = UnitConverter.metersToFeet(maxDepth) // Convert maxDepth if necessary
+                    }
+
+                    if (!isCelsius) {
+                        waterTemperature = UnitConverter.celsiusToFahrenheit(waterTemperature) // Convert waterTemperature if necessary
+                    }
+
+                    dives.add(Dive(location, maxDepth, duration, date, buddy, weatherConditions, visibility, waterTemperature, isNightDive))
                 } else {
                     Log.e("DatabaseError", "One or more columns do not exist in the dives table")
                 }
@@ -203,4 +222,10 @@ class DiveDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
     }
 
     // Additional dive-related functions can go here...
+
+    // ------------------- Getter for Context ------------------------
+    // Public getter for context
+    fun getContext(): Context {
+        return context
+    }
 }
