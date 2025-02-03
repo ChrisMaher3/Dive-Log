@@ -2,6 +2,7 @@ package com.example.divelog
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,14 +91,18 @@ class MyDivesFragment : Fragment() {
 
     // Method to delete a dive
     private fun deleteDive(position: Int) {
-        // Remove dive from the list and database
         val diveToRemove = dives[position]
+
+        // Log the dive being deleted for debugging
+        Log.d("DeleteDive", "Deleting dive: $diveToRemove")
+
+        // Delete the specific dive from the database
         val repository = DiveRepository(requireContext())
         repository.deleteDive(diveToRemove)
 
-        // Remove from list and update the adapter
+        // Remove dive from the list and update the adapter
         dives.removeAt(position)
-        adapter.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()  // Notify the adapter to refresh the list
 
         Toast.makeText(requireContext(), "Dive deleted", Toast.LENGTH_SHORT).show()
     }

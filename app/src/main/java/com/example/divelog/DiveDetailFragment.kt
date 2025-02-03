@@ -6,6 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
+
+
 
 class DiveDetailFragment : Fragment() {
 
@@ -34,14 +38,19 @@ class DiveDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_dive_detail, container, false)
+
+        // Load unit settings from SharedPreferences
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isMetersSelected = sharedPreferences.getBoolean("isMeters", true) // Default to meters
+        val isCelsiusSelected = sharedPreferences.getBoolean("isCelsius", false) // Default to Celsius
 
         // Set up views
         val locationTextView: TextView = view.findViewById(R.id.diveLocationTextView)
         val depthTextView: TextView = view.findViewById(R.id.maxDepthTextView)
         val durationTextView: TextView = view.findViewById(R.id.diveDurationTextView)
         val dateTextView: TextView = view.findViewById(R.id.diveDateTextView)
+        val watertemperatureTextView: TextView = view.findViewById(R.id.waterTemperatureTextView)
         val buddyTextView: TextView = view.findViewById(R.id.diveBuddyTextView)
         val weatherTextView: TextView = view.findViewById(R.id.weatherConditionsTextView)
         val visibilityTextView: TextView = view.findViewById(R.id.visibilityTextView)
@@ -49,9 +58,10 @@ class DiveDetailFragment : Fragment() {
 
         // Populate the views with dive data
         locationTextView.text = dive.location
-        depthTextView.text = "Max Depth: ${dive.maxDepth} m"
+        depthTextView.text = "Max Depth: ${dive.maxDepth} ${if (isMetersSelected) "m" else "ft"}"
         durationTextView.text = "Duration: ${dive.duration} min"
         dateTextView.text = "Date: ${dive.date}"
+        watertemperatureTextView.text = "Water Temperature: ${dive.waterTemperature}" + if (isCelsiusSelected) "°C" else "°F"
         buddyTextView.text = "Dive Buddy: ${dive.diveBuddy ?: "N/A"}"
         weatherTextView.text = "Weather Conditions: ${dive.weatherConditions ?: "N/A"}"
         visibilityTextView.text = "Visibility: ${dive.visibility?.toString() ?: "N/A"} m"

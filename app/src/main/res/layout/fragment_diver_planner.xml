@@ -4,11 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Diver Planner Fragment"
-        android:textSize="24sp"/>
+        android:text="Work in Progress"
+        android:textSize="20sp"
+        android:textColor="@android:color/holo_orange_dark"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dive Planner"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"/>
+
 </LinearLayout>

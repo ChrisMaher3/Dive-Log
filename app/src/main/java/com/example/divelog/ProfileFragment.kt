@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import java.util.Locale
 
@@ -31,6 +32,8 @@ class ProfileFragment : Fragment() {
     private val PICK_IMAGE_REQUEST = 1
     private var selectedImageUri: Uri? = null
     private lateinit var diveRepository: DiveRepository
+
+    private var isMetersSelected: Boolean = true // Default to meters
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +58,7 @@ class ProfileFragment : Fragment() {
         // Load profile data
         loadProfileImage()
         loadSavedProfile()
+        loadUnitSettings() // Load the unit settings before loading dive stats
         loadDiveStats()
 
         // Profile image click listener
@@ -157,20 +161,22 @@ class ProfileFragment : Fragment() {
         // Calculate total unique locations (case-insensitive)
         val uniqueLocations = dives.map { it.location.lowercase(Locale.getDefault()) }.distinct().size
 
-        // Calculate max depth
+        // Calculate max depth (convert based on user settings)
         val maxDepth = dives.maxOfOrNull { it.maxDepth } ?: 0f
+
 
         // Calculate total time diving (in minutes)
         val totalTimeInMinutes = dives.sumOf { it.duration }
         val totalHours = totalTimeInMinutes / 60
         val totalMinutes = totalTimeInMinutes % 60
 
-        // Calculate average depth
+        // Calculate average depth (convert based on user settings)
         val averageDepth = if (totalDives > 0) {
             dives.map { it.maxDepth }.average().toFloat()
         } else {
             0f
         }
+
 
         // Calculate total dive days (assuming each dive represents a unique day)
         val totalDiveDays = dives.map { it.date }.distinct().count()
@@ -178,9 +184,15 @@ class ProfileFragment : Fragment() {
         // Update the TextViews with the stats
         totalDivesTextView.text = "Total Dives: $totalDives"
         uniqueLocationsTextView.text = "Unique Locations: $uniqueLocations"
-        maxDepthTextView.text = "Max Depth: ${String.format("%.1f", maxDepth)}m"
+        maxDepthTextView.text = "Max Depth: ${String.format("%.1f", maxDepth)}" + if (isMetersSelected) "m" else "ft"
         totalTimeDivingTextView.text = "Total Dive Time: ${totalHours}h ${totalMinutes}min"
-        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}m"
+        averageDepthTextView.text = "Average Depth: ${String.format("%.1f", averageDepth)}" + if (isMetersSelected) "m" else "ft"
         totalDiveDaysTextView.text = "Total Dive Days: $totalDiveDays"
+    }
+
+    // Load the selected unit settings for meters/feet from preferences
+    private fun loadUnitSettings() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        isMetersSelected = sharedPreferences.getBoolean("isMeters", true) // Default to meters
     }
 }

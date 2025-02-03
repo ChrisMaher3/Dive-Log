@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.preference.PreferenceManager
 
 class DiveAdapter(private val context: Context, private val dives: List<Dive>) : BaseAdapter() {
 
@@ -26,6 +27,8 @@ class DiveAdapter(private val context: Context, private val dives: List<Dive>) :
 
         // Get the Dive object for the current position
         val dive = getItem(position)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val isMetersSelected = sharedPreferences.getBoolean("isMeters", true) // Default to meters
 
         // Find and populate the views with dive data
         val locationTextView: TextView = view.findViewById(R.id.locationTextView)
@@ -33,9 +36,9 @@ class DiveAdapter(private val context: Context, private val dives: List<Dive>) :
         val durationTextView: TextView = view.findViewById(R.id.durationTextView)
         val dateTextView: TextView = view.findViewById(R.id.dateTextView)
 
-        // Set dive data into the views
+        // Format depth with 1 decimal place
         locationTextView.text = dive.location
-        depthTextView.text = "Depth: ${dive.maxDepth} m"
+        depthTextView.text = "Depth: ${"%.1f".format(dive.maxDepth)} ${if (isMetersSelected) "m" else "ft"}"
         durationTextView.text = "Duration: ${dive.duration} min"
         dateTextView.text = "Date: ${dive.date}"
 
