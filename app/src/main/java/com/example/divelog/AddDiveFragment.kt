@@ -1,15 +1,17 @@
 package com.example.divelog
 
-import android.app.DatePickerDialog // Make sure this import is present
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CompoundButton
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.example.divelog.databinding.FragmentAddDiveBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +22,9 @@ class AddDiveFragment : Fragment() {
 
     private var selectedDate: String = ""
     private var isNightDive: Boolean = false
+    private var unitDepth: String = "m"
+    private var unitTemp: String = "°C"
+    private var unitVisibility: String = "m"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +36,21 @@ class AddDiveFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Get the user's unit preferences from SharedPreferences
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isMeters = sharedPreferences.getBoolean("isMeters", true)
+        val isCelsius = sharedPreferences.getBoolean("isCelsius", true)
+
+        // Set units based on the preferences
+        unitDepth = if (isMeters) "m" else "ft"
+        unitTemp = if (isCelsius) "°C" else "°F"
+        unitVisibility = if (isMeters) "m" else "ft"
+
+        // Display the units next to the fields
+        binding.maxDepth.setHint("Max Depth ($unitDepth)")
+        binding.waterTemperature.setHint("Water Temperature ($unitTemp)")
+        binding.visibility.setHint("Visibility ($unitVisibility)")
 
         // Set onClickListener for dive date selection
         binding.diveDateTextView.setOnClickListener {
@@ -79,15 +99,52 @@ class AddDiveFragment : Fragment() {
         // Get water temperature value
         val waterTemperature = binding.waterTemperature.text.toString().toFloatOrNull()
 
-        if (location.isNotEmpty() && depth != null && diveDuration != null && selectedDate.isNotEmpty()) {
-            val newDive = Dive(location, depth, diveDuration, selectedDate, diveBuddy, weatherConditions, visibility, waterTemperature, isNightDive)
+        // Get SharedPreferences
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isMeters = sharedPreferences.getBoolean("isMeters", true) // true = meters, false = feet
+        val isCelsius = sharedPreferences.getBoolean("isCelsius", true) // true = Celsius, false = Fahrenheit
+
+        // If the depth is in feet, convert it to meters
+        val finalDepth = if (depth != null) {
+            if (!isMeters) {
+                (depth * 0.3048).toFloat() // Convert feet to meters and cast to Float
+            } else {
+                depth // Keep it in meters if the user has selected meters
+            }
+        } else {
+            null
+        }
+
+        // If the water temperature is in Fahrenheit, convert it to Celsius
+        val finalTemperature = if (waterTemperature != null) {
+            if (!isCelsius) {
+                ((waterTemperature - 32) * 5 / 9).toFloat() // Convert Fahrenheit to Celsius and cast to Float
+            } else {
+                waterTemperature // Keep it in Celsius if the user has selected Celsius
+            }
+        } else {
+            null
+        }
+
+        // If required fields are valid, save the dive
+        if (location.isNotEmpty() && finalDepth != null && diveDuration != null && selectedDate.isNotEmpty()) {
+            val newDive = Dive(
+                location, finalDepth, diveDuration, selectedDate,
+                diveBuddy, weatherConditions, visibility, finalTemperature, isNightDive
+            )
             (activity as MainActivity).addDive(newDive)
 
-            Toast.makeText(requireContext(), "Dive Saved: $location, Depth: $depth m, Duration: $diveDuration min, Water Temp: $waterTemperature°C on $selectedDate", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Dive Saved: $location, Depth: ${finalDepth}m, Duration: $diveDuration min, Water Temp: $finalTemperature°C on $selectedDate",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             Toast.makeText(requireContext(), "Please fill in all required fields correctly", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
