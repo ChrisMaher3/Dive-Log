@@ -97,7 +97,7 @@ class SettingsFragment : Fragment() {
         }
 
         // Display app version in the Version Card
-        val appVersion = "Version 1.0.0" // This can be dynamically fetched
+        val appVersion = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0).versionName
         versionText.text = appVersion
     }
 
