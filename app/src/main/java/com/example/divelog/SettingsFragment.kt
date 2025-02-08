@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.content.Context
 import android.content.Intent
@@ -104,7 +104,7 @@ class SettingsFragment : Fragment() {
     private fun openFaqPage() {
         // You can navigate to an FAQ page or show a dialog
         // Example: open a web page for FAQ
-        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("http://example.com/faq"))
+        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://docs.google.com/spreadsheets/d/11BjqJQgAKpSrwUx7YbRQSEVliDpE59HmtVVbc1fXxZ4/edit?usp=sharing"))
         startActivity(intent)
     }
 

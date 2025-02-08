@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -152,7 +152,7 @@
                 android:id="@+id/contact_faq_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FAQ and Contact"
+                android:text="Report a bug"
                 android:textSize="18sp"
                 android:textColor="@color/textColor"
                 android:layout_marginBottom="8dp"/>
@@ -162,7 +162,7 @@
                 android:id="@+id/faq_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FAQ"
+                android:text="Excel sheet of known bugs"
                 android:textColor="@color/buttonTextColor"
                 android:backgroundTint="@color/accentColor"
                 android:layout_marginBottom="8dp"/>
@@ -172,7 +172,7 @@
                 android:id="@+id/contact_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Contact"
+                android:text="Placeholder"
                 android:textColor="@color/buttonTextColor"
                 android:backgroundTint="@color/accentColor"/>
 

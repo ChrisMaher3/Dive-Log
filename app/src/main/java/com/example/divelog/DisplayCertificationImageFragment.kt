@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.net.Uri
 import android.os.Bundle

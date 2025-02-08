@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.app.AlertDialog
 import android.os.Bundle

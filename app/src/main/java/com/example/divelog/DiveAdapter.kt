@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.content.Context
 import android.view.LayoutInflater

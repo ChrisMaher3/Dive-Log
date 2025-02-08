@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.app.Activity
 import android.content.Intent
@@ -108,7 +108,6 @@ class AddCertificationFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Failed to add certification", Toast.LENGTH_SHORT).show()
-            Log.e("AddCertification", "Error adding certification", e)
         }
     }
 

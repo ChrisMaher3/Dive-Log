@@ -1,4 +1,4 @@
-package com.example.divelog
+package com.chris.divelog
 
 import android.app.Activity
 import android.content.Context
