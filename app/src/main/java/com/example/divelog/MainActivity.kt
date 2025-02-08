@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
             loadFragment(ProfileFragment()) // Load the ProfileFragment as the default
         }
 
+
         // Set up the BottomNavigationView
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
@@ -68,4 +69,5 @@ class MainActivity : AppCompatActivity() {
     fun addDive(dive: Dive) {
         diveRepository.addDive(dive) // Save the dive to the database
     }
+
 }

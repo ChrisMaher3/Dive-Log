@@ -43,7 +43,7 @@ class DiveDetailFragment : Fragment() {
         // Load unit settings from SharedPreferences
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val isMetersSelected = sharedPreferences.getBoolean("isMeters", true) // Default to meters
-        val isCelsiusSelected = sharedPreferences.getBoolean("isCelsius", false) // Default to Celsius
+        val isCelsiusSelected = sharedPreferences.getBoolean("isCelsius", true) // Default to Celsius
 
         // Set up views
         val locationTextView: TextView = view.findViewById(R.id.diveLocationTextView)

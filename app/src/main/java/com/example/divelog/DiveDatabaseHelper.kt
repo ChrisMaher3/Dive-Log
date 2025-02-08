@@ -15,7 +15,7 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
 
         // Dives table definition
         const val TABLE_DIVES = "dives"
-        const val COLUMN_DIVE_ID = "_id"
+        const val COLUMN_DIVE_ID = "id"
         const val COLUMN_LOCATION = "location"
         const val COLUMN_MAX_DEPTH = "max_depth"
         const val COLUMN_DURATION = "duration"
@@ -150,6 +150,7 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
     fun addDive(dive: Dive) { // Expecting a Dive object
         val db = writableDatabase
         val values = ContentValues().apply {
+            put(COLUMN_DIVE_ID, dive.id)
             put(COLUMN_LOCATION, dive.location)
             put(COLUMN_MAX_DEPTH, dive.maxDepth)
             put(COLUMN_DURATION, dive.duration)
@@ -177,6 +178,7 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
         if (cursor.moveToFirst()) {
             do {
                 // Get the column indices
+                val idIndex = cursor.getColumnIndex(COLUMN_DIVE_ID)
                 val locationIndex = cursor.getColumnIndex(COLUMN_LOCATION)
                 val maxDepthIndex = cursor.getColumnIndex(COLUMN_MAX_DEPTH)
                 val durationIndex = cursor.getColumnIndex(COLUMN_DURATION)
@@ -189,6 +191,7 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
 
                 // Check that indices are valid and fetch data
                 if (locationIndex != -1 && maxDepthIndex != -1 && durationIndex != -1 && dateIndex != -1) {
+                    val id = cursor.getLong(idIndex)
                     val location = cursor.getString(locationIndex)
                     var maxDepth = cursor.getFloat(maxDepthIndex)
                     val duration = cursor.getInt(durationIndex)
@@ -208,7 +211,7 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
                         waterTemperature = UnitConverter.celsiusToFahrenheit(waterTemperature) // Convert waterTemperature if necessary
                     }
 
-                    dives.add(Dive(location, maxDepth, duration, date, buddy, weatherConditions, visibility, waterTemperature, isNightDive))
+                    dives.add(Dive(id, location, maxDepth, duration, date, buddy, weatherConditions, visibility, waterTemperature, isNightDive))
                 } else {
                     Log.e("DatabaseError", "One or more columns do not exist in the dives table")
                 }

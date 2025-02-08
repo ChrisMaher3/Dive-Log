@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Dive(
+    val id: Long, // Added unique ID field
     val location: String,
     val maxDepth: Float,
     val duration: Int,
@@ -16,6 +17,7 @@ data class Dive(
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
+        parcel.readLong(), // Read ID
         parcel.readString() ?: "",
         parcel.readFloat(),
         parcel.readInt(),
@@ -28,6 +30,7 @@ data class Dive(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id) // Write ID
         parcel.writeString(location)
         parcel.writeFloat(maxDepth)
         parcel.writeInt(duration)

@@ -126,8 +126,16 @@ class AddDiveFragment : Fragment() {
         // If required fields are valid, save the dive
         if (location.isNotEmpty() && finalDepth != null && diveDuration != null && selectedDate.isNotEmpty()) {
             val newDive = Dive(
-                location, finalDepth, diveDuration, selectedDate,
-                diveBuddy, weatherConditions, visibility, finalTemperature, isNightDive
+                id = 0, // This is placeholder; ID will be auto-generated in the database
+                location = location,
+                maxDepth = finalDepth,
+                duration = diveDuration,
+                date = selectedDate,
+                diveBuddy = diveBuddy,
+                weatherConditions = weatherConditions,
+                visibility = visibility,
+                waterTemperature = finalTemperature,
+                isNightDive = isNightDive
             )
             (activity as MainActivity).addDive(newDive)
 
@@ -140,8 +148,6 @@ class AddDiveFragment : Fragment() {
             Toast.makeText(requireContext(), "Please fill in all required fields correctly", Toast.LENGTH_SHORT).show()
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
