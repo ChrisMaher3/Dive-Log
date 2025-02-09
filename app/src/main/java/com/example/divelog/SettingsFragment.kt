@@ -10,9 +10,14 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.card.MaterialCardView
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 
 class SettingsFragment : Fragment() {
 
@@ -83,7 +88,7 @@ class SettingsFragment : Fragment() {
 
         // Handle Transfer Data button click
         transferButton.setOnClickListener {
-            // Implement the data transfer functionality (e.g., sync, export, etc.)
+            exportDiveLogToCSV()
         }
 
         // Handle FAQ button click
@@ -113,5 +118,40 @@ class SettingsFragment : Fragment() {
         // Example: open a web page for contact
         val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("http://example.com/contact"))
         startActivity(intent)
+    }
+
+    private fun exportDiveLogToCSV() {
+        val context = requireContext()
+        val dbHelper = DiveDatabaseHelper(context)
+        val dives = dbHelper.getAllDives()
+
+        if (dives.isEmpty()) {
+            Toast.makeText(context, "No dive data to export", Toast.LENGTH_SHORT).show()
+            return  // Corrected return statement
+        }
+
+        val csvFile = File(context.filesDir, "DiveLog.csv") // Moved outside the if-block
+        try {
+            FileWriter(csvFile).use { writer ->
+                writer.append("ID,Location,Max Depth,Duration,Date,Buddy,Weather,Visibility,Water Temperature,Night Dive\n")
+                for (dive in dives) {
+                    writer.append("${dive.id},${dive.location},${dive.maxDepth},${dive.duration},${dive.date}," +
+                            "${dive.diveBuddy},${dive.weatherConditions},${dive.visibility},${dive.waterTemperature},${dive.isNightDive}\n")
+                }
+            }
+            shareCSVFile(csvFile)
+        } catch (e: IOException) {
+            Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun shareCSVFile(csvFile: File) {
+        val uri = FileProvider.getUriForFile(requireContext(), "com.chris.divelog.fileprovider", csvFile)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/csv"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(Intent.createChooser(intent, "Share Dive Log CSV"))
     }
 }
