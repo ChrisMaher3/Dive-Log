@@ -2,7 +2,6 @@ package com.chris.divelog
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import java.util.Collections
 
 class MyDivesFragment : Fragment() {
 
@@ -50,7 +48,6 @@ class MyDivesFragment : Fragment() {
         adapter = DiveAdapter(requireContext(), dives)
         divesListView.adapter = adapter
 
-        // Restore sorting preferences
         val sharedPreferences = requireContext().getSharedPreferences("SortPreferences", Context.MODE_PRIVATE)
         val sortIndex = sharedPreferences.getInt("sortIndex", -1)
         val sortAscending = sharedPreferences.getBoolean("sortAscending", true)
@@ -63,7 +60,42 @@ class MyDivesFragment : Fragment() {
             showSortOptionsDialog()
         }
 
+        divesListView.setOnItemLongClickListener { _, _, position, _ ->
+            showDeleteDiveDialog(position)
+            true
+        }
+
+        divesListView.setOnItemClickListener { parent, _, position, _ ->
+            val selectedDive = dives[position]
+            val diveDetailFragment = DiveDetailFragment.newInstance(selectedDive)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, diveDetailFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
         return view
+    }
+
+    private fun showDeleteDiveDialog(position: Int) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Dive")
+            .setMessage("Are you sure you want to delete this dive?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteDive(position)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteDive(position: Int) {
+        val diveToRemove = dives[position]
+        Log.d("DeleteDive", "Deleting dive: $diveToRemove")
+        val repository = DiveRepository(requireContext())
+        repository.deleteDive(diveToRemove)
+        dives.removeAt(position)
+        adapter.notifyDataSetChanged()
+        Toast.makeText(requireContext(), "Dive deleted", Toast.LENGTH_SHORT).show()
     }
 
     private fun showSortOptionsDialog() {
@@ -107,38 +139,26 @@ class MyDivesFragment : Fragment() {
     }
 
     private fun sortDivesByLocation(ascending: Boolean) {
-        if (ascending) {
-            dives.sortBy { it.location }
-        } else {
-            dives.sortByDescending { it.location }
-        }
+        dives.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.location })
+        if (!ascending) dives.reverse()
         adapter.notifyDataSetChanged()
     }
 
     private fun sortDivesByDepth(ascending: Boolean) {
-        if (ascending) {
-            dives.sortBy { it.maxDepth }
-        } else {
-            dives.sortByDescending { it.maxDepth }
-        }
+        dives.sortBy { it.maxDepth }
+        if (!ascending) dives.reverse()
         adapter.notifyDataSetChanged()
     }
 
     private fun sortDivesByDuration(ascending: Boolean) {
-        if (ascending) {
-            dives.sortBy { it.duration }
-        } else {
-            dives.sortByDescending { it.duration }
-        }
+        dives.sortBy { it.duration }
+        if (!ascending) dives.reverse()
         adapter.notifyDataSetChanged()
     }
 
     private fun sortDivesByDate(ascending: Boolean) {
-        if (ascending) {
-            dives.sortBy { it.date }
-        } else {
-            dives.sortByDescending { it.date }
-        }
+        dives.sortBy { it.date }
+        if (!ascending) dives.reverse()
         adapter.notifyDataSetChanged()
     }
 }
