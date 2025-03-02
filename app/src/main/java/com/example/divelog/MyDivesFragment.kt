@@ -18,7 +18,6 @@ class MyDivesFragment : Fragment() {
     private lateinit var sortButton: Button
     private var dives: MutableList<Dive> = mutableListOf()
     private lateinit var adapter: DiveAdapter
-    private lateinit var repository: DiveRepository // Add repository
 
     companion object {
         fun newInstance(dives: List<Dive>): MyDivesFragment {
@@ -32,10 +31,9 @@ class MyDivesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Initialize repository
-        repository = DiveRepository(requireContext())
-        // Load dives from repository instead of arguments
-        dives = repository.getAllDives().toMutableList()
+        arguments?.let {
+            dives = it.getParcelableArrayList("dives") ?: mutableListOf()
+        }
     }
 
     override fun onCreateView(
@@ -79,19 +77,6 @@ class MyDivesFragment : Fragment() {
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Refresh the dive list whenever the fragment resumes
-        refreshDiveList()
-    }
-
-    private fun refreshDiveList() {
-        // Clear the current list and reload from the database
-        dives.clear()
-        dives.addAll(repository.getAllDives())
-        adapter.notifyDataSetChanged()
-    }
-
     private fun showDeleteDiveDialog(position: Int) {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Dive")
@@ -106,6 +91,7 @@ class MyDivesFragment : Fragment() {
     private fun deleteDive(position: Int) {
         val diveToRemove = dives[position]
         Log.d("DeleteDive", "Deleting dive: $diveToRemove")
+        val repository = DiveRepository(requireContext())
         repository.deleteDive(diveToRemove)
         dives.removeAt(position)
         adapter.notifyDataSetChanged()

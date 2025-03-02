@@ -22,12 +22,11 @@ class MainActivity : AppCompatActivity() {
             loadFragment(ProfileFragment()) // Load the ProfileFragment as the default
         }
 
-
         // Set up the BottomNavigationView
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigation.setOnItemSelectedListener { menuItem ->
 
-        when (menuItem.itemId) {
+            when (menuItem.itemId) {
                 R.id.action_add_dive -> {
                     loadFragment(AddDiveFragment()) // Load the AddDiveFragment when selected
                     true
@@ -36,13 +35,12 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(DiverPlannerFragment()) // Load the DiverPlannerFragment
                     true
                 }
-            R.id.action_my_dives -> {
-                val dives = diveRepository.getAllDives() ?: emptyList() // Ensure it's not null
-                loadFragment(MyDivesFragment.newInstance(dives))
-                true
-            }
-
-            R.id.action_profile -> {
+                R.id.action_my_dives -> {
+                    val dives = diveRepository.getAllDives() ?: emptyList() // Ensure it's not null
+                    loadFragment(MyDivesFragment.newInstance(dives)) // Load the MyDivesFragment with dives
+                    true
+                }
+                R.id.action_profile -> {
                     loadFragment(ProfileFragment()) // Load the ProfileFragment
                     true
                 }
@@ -72,5 +70,4 @@ class MainActivity : AppCompatActivity() {
     fun addDive(dive: Dive) {
         diveRepository.addDive(dive) // Save the dive to the database
     }
-
 }
