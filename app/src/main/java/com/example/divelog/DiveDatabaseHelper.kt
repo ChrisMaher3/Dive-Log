@@ -147,10 +147,9 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
     // ------------------- Dive Log-related functions ------------------------
 
     // Function to add a dive log
-    fun addDive(dive: Dive) { // Expecting a Dive object
+    fun addDive(dive: Dive): Long { // Expecting a Dive object
         val db = writableDatabase
         val values = ContentValues().apply {
-            put(COLUMN_DIVE_ID, dive.id)
             put(COLUMN_LOCATION, dive.location)
             put(COLUMN_MAX_DEPTH, dive.maxDepth)
             put(COLUMN_DURATION, dive.duration)
@@ -161,8 +160,16 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
             put(COLUMN_WATER_TEMPERATURE, dive.waterTemperature) // New property for water temperature
             put(COLUMN_IS_NIGHT_DIVE, if (dive.isNightDive) 1 else 0) // New property
         }
-        db.insert(TABLE_DIVES, null, values)
+        val rowId = db.insert(TABLE_DIVES, null, values)
         db.close()
+
+        if (rowId != -1L) {
+            Log.d("Database", "Dive added successfully with ID: $rowId")
+        } else {
+            Log.e("Database", "Failed to add dive: $dive")
+        }
+
+        return rowId
     }
 
     // Function to retrieve all dives
@@ -224,7 +231,24 @@ class DiveDatabaseHelper(private val context: Context) : SQLiteOpenHelper(contex
         return dives
     }
 
-    // Additional dive-related functions can go here...
+    // Function to delete a dive
+    fun deleteDive(dive: Dive): Int {
+        val db = writableDatabase
+        val rowsDeleted = db.delete(
+            TABLE_DIVES,
+            "$COLUMN_DIVE_ID = ?",
+            arrayOf(dive.id.toString())
+        )
+        db.close()
+
+        if (rowsDeleted > 0) {
+            Log.d("Database", "Dive deleted successfully: $dive")
+        } else {
+            Log.e("Database", "Failed to delete dive: $dive")
+        }
+
+        return rowsDeleted
+    }
 
     // ------------------- Getter for Context ------------------------
     // Public getter for context
