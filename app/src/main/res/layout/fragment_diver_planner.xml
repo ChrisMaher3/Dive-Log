@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@color/backgroundColor">
 
     <EditText
         android:id="@+id/depthInput"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:hint="Enter depth (m)"
         android:inputType="number"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/secondaryColor"
         android:padding="10dp" />
 
     <EditText
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:hint="Enter oxygen %"
         android:inputType="number"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/secondaryColor"
         android:padding="10dp"
         android:layout_marginTop="8dp" />
 
