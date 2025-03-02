@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -25,7 +26,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Temperature Settings Section -->
             <TextView
                 android:id="@+id/unit_settings_label"
                 android:layout_width="wrap_content"
@@ -35,7 +35,6 @@
                 android:textColor="@color/textColor"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Meters / Feet Radio Group -->
             <RadioGroup
                 android:id="@+id/length_toggle_group"
                 android:layout_width="wrap_content"
@@ -56,12 +55,10 @@
                     android:text="Feet" />
             </RadioGroup>
 
-            <!-- Add space between the radio groups -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="16dp" /> <!-- This adds a bigger gap between the two radio groups -->
+                android:layout_height="16dp" />
 
-            <!-- Celsius / Fahrenheit Radio Group -->
             <RadioGroup
                 android:id="@+id/temp_toggle_group"
                 android:layout_width="wrap_content"
@@ -105,7 +102,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Transfer Data Label -->
             <TextView
                 android:id="@+id/transfer_data_label"
                 android:layout_width="wrap_content"
@@ -115,12 +111,20 @@
                 android:textColor="@color/textColor"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Transfer Data Button -->
             <Button
                 android:id="@+id/transfer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Transfer Data"
+                android:textColor="@color/buttonTextColor"
+                android:backgroundTint="@color/accentColor"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/import_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Import Data"
                 android:textColor="@color/buttonTextColor"
                 android:backgroundTint="@color/accentColor"/>
 
@@ -147,7 +151,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- FAQ and Contact Label -->
             <TextView
                 android:id="@+id/contact_faq_label"
                 android:layout_width="wrap_content"
@@ -157,7 +160,6 @@
                 android:textColor="@color/textColor"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- FAQ Button -->
             <Button
                 android:id="@+id/faq_button"
                 android:layout_width="wrap_content"
@@ -167,7 +169,6 @@
                 android:backgroundTint="@color/accentColor"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- Contact Button -->
             <Button
                 android:id="@+id/contact_button"
                 android:layout_width="wrap_content"
@@ -199,7 +200,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- App Version Label -->
             <TextView
                 android:id="@+id/version_info_label"
                 android:layout_width="wrap_content"
@@ -209,7 +209,6 @@
                 android:textColor="@color/textColor"
                 android:layout_marginBottom="8dp"/>
 
-            <!-- App Version Text -->
             <TextView
                 android:id="@+id/version_text"
                 android:layout_width="wrap_content"

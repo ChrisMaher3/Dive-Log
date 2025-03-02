@@ -24,6 +24,7 @@ class SettingsFragment : Fragment() {
     private lateinit var lengthToggleGroup: RadioGroup
     private lateinit var tempToggleGroup: RadioGroup
     private lateinit var transferButton: Button
+    private lateinit var importButton: Button
     private lateinit var faqButton: Button
     private lateinit var contactButton: Button
     private lateinit var versionText: TextView
@@ -39,21 +40,19 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the UI elements
         lengthToggleGroup = view.findViewById(R.id.length_toggle_group)
         tempToggleGroup = view.findViewById(R.id.temp_toggle_group)
         transferButton = view.findViewById(R.id.transfer_button)
+        importButton = view.findViewById(R.id.import_button)
         faqButton = view.findViewById(R.id.faq_button)
         contactButton = view.findViewById(R.id.contact_button)
         versionText = view.findViewById(R.id.version_text)
         versionInfoCard = view.findViewById(R.id.versionInfoCard)
 
-        // Load saved preferences for unit settings
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val isMeters = sharedPreferences.getBoolean("isMeters", true)
         val isCelsius = sharedPreferences.getBoolean("isCelsius", true)
 
-        // Set the radio buttons based on saved preferences
         if (isMeters) {
             view.findViewById<RadioButton>(R.id.rb_meters).isChecked = true
         } else {
@@ -66,7 +65,6 @@ class SettingsFragment : Fragment() {
             view.findViewById<RadioButton>(R.id.rb_fahrenheit).isChecked = true
         }
 
-        // Handle the radio buttons for Meters/Feet
         lengthToggleGroup.setOnCheckedChangeListener { _, checkedId ->
             val editor = sharedPreferences.edit()
             when (checkedId) {
@@ -76,7 +74,6 @@ class SettingsFragment : Fragment() {
             editor.apply()
         }
 
-        // Handle the radio buttons for Celsius/Fahrenheit
         tempToggleGroup.setOnCheckedChangeListener { _, checkedId ->
             val editor = sharedPreferences.edit()
             when (checkedId) {
@@ -86,58 +83,42 @@ class SettingsFragment : Fragment() {
             editor.apply()
         }
 
-        // Handle Transfer Data button click
         transferButton.setOnClickListener {
             exportDiveLogToCSV()
         }
 
-        // Handle FAQ button click
+        importButton.setOnClickListener {
+            importDiveLog()
+        }
+
         faqButton.setOnClickListener {
             openFaqPage()
         }
 
-        // Handle Contact button click
         contactButton.setOnClickListener {
             openContactPage()
         }
 
-        // Display app version in the Version Card
         val appVersion = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0).versionName
         versionText.text = appVersion
     }
 
     private fun openFaqPage() {
-        // You can navigate to an FAQ page or show a dialog
-        // Example: open a web page for FAQ
         val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("https://docs.google.com/spreadsheets/d/11BjqJQgAKpSrwUx7YbRQSEVliDpE59HmtVVbc1fXxZ4/edit?usp=sharing"))
         startActivity(intent)
     }
 
     private fun openContactPage() {
-        // You can open the contact page or show a contact form
-        // Example: open a web page for contact
         val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("http://example.com/contact"))
         startActivity(intent)
     }
 
     private fun exportDiveLogToCSV() {
         val context = requireContext()
-        val dbHelper = DiveDatabaseHelper(context)
-        val dives = dbHelper.getAllDives()
-
-        if (dives.isEmpty()) {
-            Toast.makeText(context, "No dive data to export", Toast.LENGTH_SHORT).show()
-            return  // Corrected return statement
-        }
-
-        val csvFile = File(context.filesDir, "DiveLog.csv") // Moved outside the if-block
+        val csvFile = File(context.filesDir, "DiveLog.csv")
         try {
             FileWriter(csvFile).use { writer ->
-                writer.append("ID,Location,Max Depth,Duration,Date,Buddy,Weather,Visibility,Water Temperature,Night Dive\n")
-                for (dive in dives) {
-                    writer.append("${dive.id},${dive.location},${dive.maxDepth},${dive.duration},${dive.date}," +
-                            "${dive.diveBuddy},${dive.weatherConditions},${dive.visibility},${dive.waterTemperature},${dive.isNightDive}\n")
-                }
+                writer.append("Sample Dive Log Data\n") // Placeholder data
             }
             shareCSVFile(csvFile)
         } catch (e: IOException) {
@@ -153,5 +134,9 @@ class SettingsFragment : Fragment() {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         startActivity(Intent.createChooser(intent, "Share Dive Log CSV"))
+    }
+
+    private fun importDiveLog() {
+        Toast.makeText(requireContext(), "Import functionality coming soon", Toast.LENGTH_SHORT).show()
     }
 }
