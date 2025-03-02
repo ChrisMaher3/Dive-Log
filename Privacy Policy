@@ -1,0 +1,32 @@
+Effective Date: 02/03/25
+
+we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information when you use our app, which allows you to log your dives, store dive data locally, and select pictures for your dive logs.
+
+1. Information We Collect
+
+    External Storage: Our app requires permission to access your external storage to load dive data and select pictures from your device. This is necessary to enable you to store and manage your dive logs and media (such as images of your dives). We do not access or store any of your personal files other than those you select within the app.
+    Username: During use of the app, you may choose a username. This information is used solely within the app and is not shared with third parties.
+    Dive Data: Your dive logs (including dive details such as date, location, depth, etc.) are stored locally on your device using SQLite. This data is only accessible to you and is not shared with us or any third parties. We do not collect, store, or access any personal dive information outside of what you input into the app.
+
+2. How We Use Your Information
+
+    The data you input into the app (dive logs and username) is used exclusively to enhance your experience while using the app. We do not use your personal data for advertising or any other purposes.
+    Your dive logs and media (pictures) are stored locally on your device, and we do not access, upload, or share this information with third parties.
+
+3. Data Storage
+
+    All your dive logs and associated data (including images) are stored locally on your device using SQLite. We do not collect or store any of this data on our servers. This means that we do not have access to your dive data, username, or any other personal information you store within the app.
+
+4. Data Security
+
+    We take reasonable precautions to protect your data. However, please note that no method of transmission over the internet, or method of electronic storage, is 100% secure. While we strive to use commercially acceptable means to protect your data, we cannot guarantee its absolute security.
+
+5. Sharing Your Information
+
+    We do not sell, rent, or share your personal information with third parties. Your dive logs, username, and media are only stored locally on your device and are not transmitted to us or any third party.
+
+6. Changes to This Privacy Policy
+
+    We may update this Privacy Policy from time to time. Any changes will be reflected in this document with an updated "Effective Date" at the top. We encourage you to review this Privacy Policy periodically to stay informed about how we are protecting your information.
+
+7. Contact Us If you have any questions or concerns regarding this Privacy Policy, please contact us at chrisappstore@proton.me.
