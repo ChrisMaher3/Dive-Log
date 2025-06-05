@@ -15,6 +15,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="teal_500">#009688</color>
+
 
     <!-- Button Colors -->
     <color name="buttonBackgroundColor">#009CA6</color> <!-- Match secondary color -->
