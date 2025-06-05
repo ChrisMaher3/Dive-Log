@@ -11,7 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Label for Depth -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nitrox Planner"
+            android:textColor="@color/primaryColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +28,6 @@
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Depth Input -->
         <EditText
             android:id="@+id/depthInput"
             android:layout_width="match_parent"
@@ -35,7 +42,6 @@
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Label for Oxygen -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +50,6 @@
             android:textSize="14sp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Oxygen Input -->
         <EditText
             android:id="@+id/oxygenInput"
             android:layout_width="match_parent"
@@ -59,24 +64,165 @@
             android:textSize="16sp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Calculate Button -->
         <Button
             android:id="@+id/calculateButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Calculate"
+            android:text="Calculate Nitrox"
             android:textAllCaps="false"
             android:textColor="@color/buttonTextColor"
             android:background="@drawable/rounded_button"
             android:textSize="18sp"
             android:layout_marginBottom="32dp" />
 
-        <!-- Result Text -->
         <TextView
             android:id="@+id/resultText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Results will appear here"
+            android:text="Nitrox results will appear here"
+            android:textSize="16sp"
+            android:textColor="@color/textColor"
+            android:background="@drawable/rounded_result_bg"
+            android:padding="16dp"
+            android:layout_marginBottom="32dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gas Consumption Calculator"
+            android:textColor="@color/primaryColor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tank Size (Liters)"
+            android:textColor="@color/primaryColor"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/tankSizeInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g., 12 for 12L tank"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="@color/primaryColor"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Pressure (bar)"
+            android:textColor="@color/primaryColor"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/startPressureInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g., 200"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="@color/primaryColor"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End Pressure (bar - e.g., for reserve)"
+            android:textColor="@color/primaryColor"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/endPressureInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g., 50"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="@color/primaryColor"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Target Depth (meters)"
+            android:textColor="@color/primaryColor"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/targetDepthInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g., 18"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="@color/primaryColor"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Surface Air Consumption (SAC) Rate (Liters/min)"
+            android:textColor="@color/primaryColor"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/sacRateInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="e.g., 20"
+            android:inputType="numberDecimal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@android:drawable/edit_text"
+            android:textColor="@color/primaryColor"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/calculateGasButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Calculate Gas Consumption"
+            android:textAllCaps="false"
+            android:textColor="@color/buttonTextColor"
+            android:background="@drawable/rounded_button"
+            android:textSize="18sp"
+            android:layout_marginBottom="32dp" />
+
+        <TextView
+            android:id="@+id/gasResultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gas consumption results will appear here"
             android:textSize="16sp"
             android:textColor="@color/textColor"
             android:background="@drawable/rounded_result_bg"
